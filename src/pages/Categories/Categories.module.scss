@@ -1,0 +1,70 @@
+.page {
+  padding: 48px 0 80px;
+  background: #f7f8fa;
+  min-height: calc(100vh - 64px);
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.subtitle {
+  font-size: 16px !important;
+  color: #86909c !important;
+}
+
+.cardLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  border-radius: 12px !important;
+  text-align: center;
+  position: relative;
+  transition: box-shadow 0.25s, transform 0.25s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08) !important;
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.iconWrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.icon {
+  font-size: 24px;
+}
+
+.catName {
+  font-weight: 600 !important;
+  margin-bottom: 8px !important;
+}
+
+.catDesc {
+  font-size: 13px !important;
+  color: #86909c !important;
+  margin-bottom: 0 !important;
+  line-height: 1.6 !important;
+}

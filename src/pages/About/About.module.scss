@@ -1,0 +1,173 @@
+.page {
+  padding: 48px 0 80px;
+  background: #f7f8fa;
+  min-height: calc(100vh - 64px);
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.header {
+  margin-bottom: 48px;
+}
+
+.subtitle {
+  font-size: 16px !important;
+  color: #86909c !important;
+}
+
+/* 项目信息卡片 */
+.orgCard {
+  border-radius: 12px !important;
+  margin-bottom: 56px;
+  border-left: 4px solid #1677ff;
+}
+
+.orgHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.orgIcon {
+  font-size: 20px;
+  color: #1677ff;
+}
+
+.orgTitle {
+  margin-bottom: 0 !important;
+}
+
+/* 通用区块 */
+.section {
+  margin-bottom: 56px;
+}
+
+.sectionTitle {
+  font-weight: 700 !important;
+  margin-bottom: 24px !important;
+}
+
+/* 介绍卡片 */
+.introCard {
+  border-radius: 12px !important;
+}
+
+.introText {
+  font-size: 15px !important;
+  color: #4e5969 !important;
+  line-height: 2 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 统计卡片 */
+.statCard {
+  border-radius: 12px !important;
+  text-align: center;
+}
+
+.statIcon {
+  font-size: 24px;
+  color: #1677ff;
+  margin-bottom: 8px;
+}
+
+.statLabel {
+  display: block;
+  font-size: 13px;
+  color: #86909c;
+  margin-bottom: 4px;
+}
+
+.statValue {
+  margin-bottom: 0 !important;
+}
+
+/* CCCA 体系 */
+.cccaCard {
+  border-radius: 12px !important;
+  height: 100%;
+}
+
+.cccaHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.cccaIcon {
+  font-size: 18px;
+  color: #1677ff;
+}
+
+.cccaBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cccaRow {
+  display: flex;
+  gap: 12px;
+}
+
+.cccaRole {
+  min-width: 36px;
+  flex-shrink: 0;
+}
+
+/* 联系方式 */
+.contactCard {
+  border-radius: 12px !important;
+}
+
+.contactItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.contactIcon {
+  font-size: 20px;
+  color: #1677ff;
+  margin-top: 4px;
+}
+
+.contactValue {
+  font-size: 15px !important;
+  font-weight: 500;
+  margin-bottom: 0 !important;
+}
+
+/* 开发者 */
+.devCard {
+  border-radius: 12px !important;
+  border-left: 4px solid #86909c;
+}
+
+.devHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.devIcon {
+  font-size: 18px;
+  color: #86909c;
+}
+
+.devTitle {
+  margin-bottom: 0 !important;
+}
+
+.devText {
+  font-size: 15px !important;
+  color: #4e5969 !important;
+  margin-bottom: 0 !important;
+}

@@ -1,0 +1,108 @@
+.footer {
+  background: #1d2129 !important;
+  padding: 0 !important;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px 24px;
+}
+
+.top {
+  display: flex;
+  gap: 48px;
+}
+
+.brand {
+  flex: 1;
+  min-width: 240px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.logoImg {
+  height: 28px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.logoText {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.brandDesc {
+  font-size: 14px;
+  color: #86909c !important;
+  display: block;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.socials {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.socialIcon {
+  font-size: 18px;
+  color: #86909c;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #1677ff;
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+}
+
+.colTitle {
+  color: #fff !important;
+  font-weight: 600 !important;
+  margin-bottom: 16px !important;
+}
+
+.colLink {
+  color: #86909c !important;
+  font-size: 14px;
+  line-height: 2.2;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #1677ff !important;
+  }
+}
+
+.divider {
+  border-color: #2d2f36 !important;
+  margin: 32px 0 16px !important;
+}
+
+.bottom {
+  text-align: center;
+}
+
+.copyright {
+  font-size: 13px;
+  color: #4e5969 !important;
+}
+
+@media (max-width: 768px) {
+  .top {
+    flex-direction: column;
+    gap: 32px;
+  }
+}

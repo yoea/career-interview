@@ -1,0 +1,47 @@
+.page {
+  padding: 48px 0 80px;
+  background: #f7f8fa;
+  min-height: calc(100vh - 64px);
+}
+
+.inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.update {
+  color: #86909c !important;
+  margin-bottom: 32px !important;
+}
+
+.card {
+  border-radius: 12px !important;
+
+  h4 {
+    margin-top: 28px !important;
+    margin-bottom: 12px !important;
+
+    &:first-child {
+      margin-top: 0 !important;
+    }
+  }
+
+  p {
+    font-size: 15px !important;
+    color: #4e5969 !important;
+    line-height: 2 !important;
+    margin-bottom: 12px !important;
+  }
+
+  ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+
+    li {
+      font-size: 15px;
+      color: #4e5969;
+      line-height: 2;
+    }
+  }
+}
