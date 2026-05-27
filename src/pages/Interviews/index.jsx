@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Typography, Card, Row, Col, Tag, Input, Select, Pagination } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faPlay, faComment } from '@fortawesome/free-solid-svg-icons'
@@ -11,26 +12,54 @@ const { Search } = Input
 const PAGE_SIZE = 12
 
 export default function Interviews() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const urlCategory = searchParams.get('category')
+  const urlBroad = searchParams.get('broad')
+
   const [search, setSearch] = useState('')
-  const [category, setCategory] = useState(null)
+  // If URL has broad category, don't set specific category filter
+  const [category, setCategory] = useState(urlBroad ? null : (urlCategory || null))
+  const [broadFilter] = useState(urlBroad || null)
   const [page, setPage] = useState(1)
 
   const filtered = videos.filter(v => {
     const matchSearch = !search || v.title.includes(search) || v.profession.includes(search)
     const matchCategory = !category || v.profession === category
-    return matchSearch && matchCategory
+    const matchBroad = !broadFilter || v.category === broadFilter
+    return matchSearch && matchCategory && matchBroad
   })
 
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  const handleCategoryChange = (val) => {
+    setCategory(val)
+    setPage(1)
+    // Clear broad filter when user manually selects a category
+    if (val) {
+      setSearchParams({ category: val })
+    } else {
+      setSearchParams({})
+    }
+  }
+
+  const headerTitle = broadFilter
+    ? `${broadFilter} · 访谈内容`
+    : category
+      ? `${category} · 访谈内容`
+      : '访谈内容'
+
+  const headerSub = broadFilter
+    ? `共 ${filtered.length} 期「${broadFilter}」相关访谈`
+    : category
+      ? `共 ${filtered.length} 期「${category}」相关访谈`
+      : `共 ${videos.length} 期访谈，覆盖 ${categories.length} 个职业领域`
 
   return (
     <div className={styles.page}>
       <div className={styles.inner}>
         <div className={styles.header}>
-          <Title level={2}>访谈内容</Title>
-          <Paragraph className={styles.subtitle}>
-            共 {videos.length} 期访谈，覆盖 {categories.length} 个职业领域
-          </Paragraph>
+          <Title level={2}>{headerTitle}</Title>
+          <Paragraph className={styles.subtitle}>{headerSub}</Paragraph>
         </div>
 
         <div className={styles.toolbar}>
@@ -45,8 +74,9 @@ export default function Interviews() {
             placeholder="筛选职业"
             allowClear
             className={styles.select}
+            value={category}
             options={categories.map(c => ({ label: c, value: c }))}
-            onChange={v => { setCategory(v); setPage(1) }}
+            onChange={handleCategoryChange}
           />
         </div>
 

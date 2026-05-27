@@ -44,7 +44,10 @@ export default function Categories() {
         <Row gutter={[24, 24]}>
           {groups.map((cat, i) => (
             <Col key={cat.name} xs={24} sm={12} md={8} lg={6}>
-              <a href="/interviews" className={styles.cardLink}>
+              <a
+                href={`/interviews?broad=${encodeURIComponent(cat.name)}`}
+                className={styles.cardLink}
+              >
                 <Card hoverable className={styles.card}>
                   <Badge count={cat.count} className={styles.badge} overflowCount={999} />
                   <div

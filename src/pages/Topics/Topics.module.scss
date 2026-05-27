@@ -1,5 +1,5 @@
 .page {
-  padding: 48px 0 80px;
+  padding: 48px 0 0;
   background: #f7f8fa;
   min-height: calc(100vh - 64px);
 }
@@ -41,6 +41,7 @@
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  margin-bottom: 48px;
 }
 
 .tag {

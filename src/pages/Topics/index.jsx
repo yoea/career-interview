@@ -15,7 +15,7 @@ const tagColors = [
 export default function Topics() {
   const allTopics = useMemo(() => getVideosByCategory(), [])
   const [search, setSearch] = useState('')
-  const [sort, setSort] = useState('count') // 'count' | 'name'
+  const [sort, setSort] = useState('count')
 
   const maxCount = allTopics[0]?.count || 1
   const minCount = 1
@@ -28,11 +28,9 @@ export default function Topics() {
     if (sort === 'name') {
       list = [...list].sort((a, b) => a.name.localeCompare(b.name, 'zh'))
     }
-    // default is already sorted by count desc
     return list
   }, [allTopics, search, sort])
 
-  // Map count → font size (14px ~ 42px)
   function getFontSize(count) {
     if (maxCount === minCount) return 24
     const ratio = (count - minCount) / (maxCount - minCount)
@@ -75,7 +73,7 @@ export default function Topics() {
           {filtered.map((topic, i) => (
             <a
               key={topic.name}
-              href="/interviews"
+              href={`/interviews?category=${encodeURIComponent(topic.name)}`}
               className={styles.tag}
               style={{
                 fontSize: `${getFontSize(topic.count)}px`,
