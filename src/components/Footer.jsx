@@ -63,9 +63,11 @@ export default function Footer() {
               <Tooltip title="公众号：新华爱心教育基金会">
                 <FontAwesomeIcon icon={faWeixin} className={styles.socialIcon} />
               </Tooltip>
-              <a href="https://weibo.com/xhcef" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faWeibo} className={styles.socialIcon} />
-              </a>
+              <Tooltip title="@新华爱心教育基金会">
+                <a href="https://weibo.com/xhcef" target="_blank" rel="noopener noreferrer">
+                  <FontAwesomeIcon icon={faWeibo} className={styles.socialIcon} />
+                </a>
+              </Tooltip>
               <Tooltip title={EMAIL}>
                 <FontAwesomeIcon
                   icon={faEnvelope}
