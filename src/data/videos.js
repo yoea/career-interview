@@ -1,7 +1,10 @@
 import rawVideos from './videos.json'
 
 const CACHE_KEY = 'xwzw_videos_cache'
-const CACHE_TTL = 7 * 24 * 60 * 60 * 1000 // 7 days
+const FETCH_INTERVAL = 7 * 24 * 60 * 60 * 1000 // 7 days
+const API_BASE = '/api/bili'
+const SEASON_ID = 131230
+const MID = 395341214
 
 // ─── Cache helpers ───────────────────────────────────────────────
 function getCached() {
@@ -9,11 +12,7 @@ function getCached() {
     const raw = localStorage.getItem(CACHE_KEY)
     if (!raw) return null
     const { data, timestamp } = JSON.parse(raw)
-    if (Date.now() - timestamp > CACHE_TTL) {
-      localStorage.removeItem(CACHE_KEY)
-      return null
-    }
-    return data
+    return { data, timestamp }
   } catch {
     return null
   }
@@ -22,8 +21,100 @@ function getCached() {
 function setCache(data) {
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }))
-  } catch {
-    // localStorage full or unavailable, silently ignore
+  } catch {}
+}
+
+function isStale(timestamp) {
+  return !timestamp || Date.now() - timestamp > FETCH_INTERVAL
+}
+
+// ─── Background fetch from Bilibili API ──────────────────────────
+async function fetchSeasonAids() {
+  const aids = []
+  let page = 1
+  while (true) {
+    const res = await fetch(
+      `${API_BASE}/x/polymer/web-space/seasons_archives_list?mid=${MID}&season_id=${SEASON_ID}&sort_reverse=false&page_num=${page}&page_size=100`
+    )
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const json = await res.json()
+    if (json.code !== 0 || !json.data?.aids?.length) break
+    aids.push(...json.data.aids)
+    if (json.data.aids.length < 100) break
+    page++
+  }
+  return aids
+}
+
+async function fetchVideoDetail(aid) {
+  const res = await fetch(`${API_BASE}/x/web-interface/view?aid=${aid}`)
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const json = await res.json()
+  if (json.code !== 0) throw new Error(`API ${json.code}`)
+  const v = json.data
+  return {
+    bvid: v.bvid,
+    aid: v.aid,
+    title: v.title,
+    description: v.desc,
+    url: `https://www.bilibili.com/video/${v.bvid}`,
+    pic: v.pic,
+    author: v.owner.name,
+    mid: v.owner.mid,
+    created: v.pubdate,
+    length: formatDuration(v.duration),
+    play: v.stat.view,
+    comment: v.stat.reply,
+    typeid: v.tid,
+    is_union_video: v.is_union_video ? 1 : 0,
+    season_id: SEASON_ID,
+  }
+}
+
+function formatDuration(seconds) {
+  const m = Math.floor(seconds / 60)
+  const s = seconds % 60
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms))
+}
+
+let fetching = false
+
+async function backgroundFetch(existingData) {
+  if (fetching) return
+  fetching = true
+  try {
+    console.log('[data] Refreshing video data from Bilibili...')
+    const aids = await fetchSeasonAids()
+    const existingMap = new Map((existingData || []).map(v => [v.aid, v]))
+    const results = []
+
+    for (const aid of aids) {
+      try {
+        const detail = await fetchVideoDetail(aid)
+        const old = existingMap.get(aid)
+        results.push(old ? { ...old, play: detail.play, comment: detail.comment, pic: detail.pic, url: detail.url } : detail)
+      } catch {
+        if (existingMap.has(aid)) results.push(existingMap.get(aid))
+      }
+      await sleep(1500)
+    }
+
+    if (results.length > 0) {
+      setCache(results)
+      // Also update the in-memory export
+      const processed = processVideos(results)
+      videos.length = 0
+      videos.push(...processed)
+      console.log(`[data] Updated ${results.length} videos`)
+    }
+  } catch (e) {
+    console.warn('[data] Background fetch failed:', e.message)
+  } finally {
+    fetching = false
   }
 }
 
@@ -71,8 +162,7 @@ function categorize(profession) {
 }
 
 function getCategoryMeta(name) {
-  const found = CATEGORY_RULES.find(r => r.name === name)
-  return found || { name, icon: 'ellipsis' }
+  return CATEGORY_RULES.find(r => r.name === name) || { name, icon: 'ellipsis' }
 }
 
 // ─── Process videos ──────────────────────────────────────────────
@@ -80,7 +170,6 @@ function processVideos(source) {
   const interviewVideos = source.filter(v =>
     v.title.includes('生涯人物访谈') || v.title.includes('生涯人物访谈丨') || v.title.includes('生涯人物访谈|')
   )
-
   return interviewVideos
     .map(v => ({
       id: v.bvid,
@@ -97,20 +186,27 @@ function processVideos(source) {
     .sort((a, b) => b.play - a.play)
 }
 
-// ─── Initialize: try cache, fallback to JSON ─────────────────────
+// ─── Initialize ──────────────────────────────────────────────────
 const cached = getCached()
-let videoData
+let initialData
 
-if (cached) {
-  videoData = cached
+if (cached && !isStale(cached.timestamp)) {
+  // Fresh cache — use it directly
+  initialData = cached.data
 } else {
-  videoData = processVideos(rawVideos)
-  setCache(videoData)
+  // No cache or stale — use bundled JSON, then refresh in background
+  initialData = processVideos(rawVideos)
+  setCache(initialData)
+
+  // Schedule background refresh (only if proxy is available)
+  if (typeof window !== 'undefined') {
+    setTimeout(() => backgroundFetch(rawVideos), 2000)
+  }
 }
 
-export const videos = videoData
+export const videos = [...initialData]
 
-// Season stats
+// Season stats (from bundled JSON, stable)
 const meta = rawVideos[0]?.meta
 export const seasonStats = {
   totalViews: meta?.stat?.view ?? 0,
@@ -126,7 +222,6 @@ export const totalVideos = rawVideos.length
 
 export const categories = [...new Set(videos.map(v => v.profession))].sort()
 
-// ─── Broad category groups ───────────────────────────────────────
 export function getBroadCategories() {
   const map = {}
   for (const v of videos) {
@@ -139,7 +234,6 @@ export function getBroadCategories() {
     .sort((a, b) => b.count - a.count)
 }
 
-// ─── Raw profession groups ───────────────────────────────────────
 export function getVideosByCategory() {
   const map = {}
   for (const v of videos) {
