@@ -1,24 +1,44 @@
 import rawVideos from './videos.json'
 
-// Filter only 生涯人物访谈 videos
-const interviewVideos = rawVideos.filter(v =>
-  v.title.includes('生涯人物访谈') || v.title.includes('生涯人物访谈丨') || v.title.includes('生涯人物访谈|')
-)
+const CACHE_KEY = 'xwzw_videos_cache'
+const CACHE_TTL = 7 * 24 * 60 * 60 * 1000 // 7 days
 
-// Extract profession from title
+// ─── Cache helpers ───────────────────────────────────────────────
+function getCached() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY)
+    if (!raw) return null
+    const { data, timestamp } = JSON.parse(raw)
+    if (Date.now() - timestamp > CACHE_TTL) {
+      localStorage.removeItem(CACHE_KEY)
+      return null
+    }
+    return data
+  } catch {
+    return null
+  }
+}
+
+function setCache(data) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }))
+  } catch {
+    // localStorage full or unavailable, silently ignore
+  }
+}
+
+// ─── Profession extraction ───────────────────────────────────────
 function extractProfession(title) {
   const match = title.match(/生涯人物访谈[\s|丨|｜]+(.+?)(?:访谈录|访谈)?$/)
   return match ? match[1].trim() : title.replace(/生涯人物访谈[\s|丨|｜]*/, '').trim()
 }
 
-// Format play count
 export function formatPlayCount(n) {
   if (n >= 10000) return (n / 10000).toFixed(1) + '万'
   if (n >= 1000) return (n / 1000).toFixed(1) + 'k'
   return String(n)
 }
 
-// Format timestamp to date string
 function formatDate(ts) {
   const d = new Date(ts * 1000)
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -56,20 +76,39 @@ function getCategoryMeta(name) {
 }
 
 // ─── Process videos ──────────────────────────────────────────────
-export const videos = interviewVideos
-  .map(v => ({
-    id: v.bvid,
-    title: v.title,
-    profession: extractProfession(v.title),
-    category: categorize(extractProfession(v.title)),
-    url: v.url,
-    cover: v.pic,
-    length: v.length,
-    play: v.play,
-    comment: v.comment,
-    date: formatDate(v.created),
-  }))
-  .sort((a, b) => b.play - a.play)
+function processVideos(source) {
+  const interviewVideos = source.filter(v =>
+    v.title.includes('生涯人物访谈') || v.title.includes('生涯人物访谈丨') || v.title.includes('生涯人物访谈|')
+  )
+
+  return interviewVideos
+    .map(v => ({
+      id: v.bvid,
+      title: v.title,
+      profession: extractProfession(v.title),
+      category: categorize(extractProfession(v.title)),
+      url: v.url,
+      cover: v.pic,
+      length: v.length,
+      play: v.play,
+      comment: v.comment,
+      date: formatDate(v.created),
+    }))
+    .sort((a, b) => b.play - a.play)
+}
+
+// ─── Initialize: try cache, fallback to JSON ─────────────────────
+const cached = getCached()
+let videoData
+
+if (cached) {
+  videoData = cached
+} else {
+  videoData = processVideos(rawVideos)
+  setCache(videoData)
+}
+
+export const videos = videoData
 
 // Season stats
 const meta = rawVideos[0]?.meta
@@ -85,10 +124,9 @@ export const seasonStats = {
 export const totalPlays = rawVideos.reduce((sum, v) => sum + (v.play || 0), 0)
 export const totalVideos = rawVideos.length
 
-// Unique raw professions
 export const categories = [...new Set(videos.map(v => v.profession))].sort()
 
-// ─── Broad category groups (for 职业分类 page) ───────────────────
+// ─── Broad category groups ───────────────────────────────────────
 export function getBroadCategories() {
   const map = {}
   for (const v of videos) {
@@ -101,7 +139,7 @@ export function getBroadCategories() {
     .sort((a, b) => b.count - a.count)
 }
 
-// ─── Raw profession groups (for 热门话题 tag cloud) ───────────────
+// ─── Raw profession groups ───────────────────────────────────────
 export function getVideosByCategory() {
   const map = {}
   for (const v of videos) {
