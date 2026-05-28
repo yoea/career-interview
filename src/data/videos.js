@@ -12,6 +12,11 @@ function getCached() {
     const raw = localStorage.getItem(CACHE_KEY)
     if (!raw) return null
     const { data, timestamp } = JSON.parse(raw)
+    // Validate: must be array with expected fields
+    if (!Array.isArray(data) || !data[0]?.profession) {
+      localStorage.removeItem(CACHE_KEY)
+      return null
+    }
     return { data, timestamp }
   } catch {
     return null
@@ -83,33 +88,33 @@ function sleep(ms) {
 
 let fetching = false
 
-async function backgroundFetch(existingData) {
+async function backgroundFetch(existingRaw) {
   if (fetching) return
   fetching = true
   try {
-    console.log('[data] Refreshing video data from Bilibili...')
+    console.log('[data] Refreshing from Bilibili...')
     const aids = await fetchSeasonAids()
-    const existingMap = new Map((existingData || []).map(v => [v.aid, v]))
-    const results = []
+    const existingMap = new Map((existingRaw || []).map(v => [v.aid, v]))
+    const rawResults = []
 
     for (const aid of aids) {
       try {
         const detail = await fetchVideoDetail(aid)
         const old = existingMap.get(aid)
-        results.push(old ? { ...old, play: detail.play, comment: detail.comment, pic: detail.pic, url: detail.url } : detail)
+        rawResults.push(old ? { ...old, play: detail.play, comment: detail.comment, pic: detail.pic, url: detail.url } : detail)
       } catch {
-        if (existingMap.has(aid)) results.push(existingMap.get(aid))
+        if (existingMap.has(aid)) rawResults.push(existingMap.get(aid))
       }
       await sleep(1500)
     }
 
-    if (results.length > 0) {
-      setCache(results)
-      // Also update the in-memory export
-      const processed = processVideos(results)
+    if (rawResults.length > 0) {
+      // Process before caching — cache stores PROCESSED data
+      const processed = processVideos(rawResults)
+      setCache(processed)
       videos.length = 0
       videos.push(...processed)
-      console.log(`[data] Updated ${results.length} videos`)
+      console.log(`[data] Updated ${processed.length} videos`)
     }
   } catch (e) {
     console.warn('[data] Background fetch failed:', e.message)
@@ -191,15 +196,15 @@ const cached = getCached()
 let initialData
 
 if (cached && !isStale(cached.timestamp)) {
-  // Fresh cache — use it directly
+  // Fresh cache — use processed data directly
   initialData = cached.data
 } else {
-  // No cache or stale — use bundled JSON, then refresh in background
+  // No cache or stale — process bundled JSON, then refresh in background
   initialData = processVideos(rawVideos)
   setCache(initialData)
 
-  // Schedule background refresh (only if proxy is available)
   if (typeof window !== 'undefined') {
+    // Pass rawVideos so backgroundFetch can merge with existing raw data
     setTimeout(() => backgroundFetch(rawVideos), 2000)
   }
 }
