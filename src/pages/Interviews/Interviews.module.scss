@@ -29,12 +29,6 @@
 .search {
   max-width: 360px;
   flex: 1;
-
-  :global {
-    .ant-input-search-button {
-      height: 32px;
-    }
-  }
 }
 
 .select {

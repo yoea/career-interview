@@ -36,13 +36,28 @@ select,
   font-size: 16px !important;
 }
 
+// Ensure search button height matches input
+.ant-input-search {
+  .ant-input-wrapper {
+    height: 32px;
+
+    .ant-input {
+      height: 32px;
+    }
+
+    .ant-input-group-addon {
+      .ant-input-search-button {
+        height: 32px;
+      }
+    }
+  }
+}
+
 @media (max-width: 768px) {
-  // Tighter spacing on mobile
   body {
     font-size: 14px;
   }
 
-  // Ant Design mobile tweaks
   .ant-card-body {
     padding: 16px !important;
   }
