@@ -1,7 +1,7 @@
 import rawVideos from './videos.json'
 
 const CACHE_KEY = 'xwzw_videos_cache'
-const FETCH_INTERVAL = 7 * 24 * 60 * 60 * 1000 // 7 days
+const FETCH_INTERVAL = 1 * 60 * 60 * 1000 // 1 hour
 const API_BASE = '/api/bili'
 const SEASON_ID = 131230
 const MID = 395341214

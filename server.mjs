@@ -6,12 +6,13 @@
  */
 
 import http from 'http'
+import https from 'https'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const DIST = path.join(__dirname, 'dist')
+const DIST = process.env.STATIC_DIR || path.join(__dirname, 'dist')
 const PORT = process.env.PORT || 3000
 
 const MIME = {
@@ -31,7 +32,7 @@ const MIME = {
 function proxyBilibili(apiPath) {
   return new Promise((resolve, reject) => {
     const url = `https://api.bilibili.com${apiPath}`
-    const req = http.get(url, {
+    const req = https.get(url, {
       headers: {
         'Referer': 'https://www.bilibili.com',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -48,10 +49,15 @@ function proxyBilibili(apiPath) {
 
 // ─── Static file server ──────────────────────────────────────────
 function serveStatic(res, filePath) {
+  // If path is a directory, look for index.html inside it
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+    filePath = path.join(filePath, 'index.html')
+  }
+
   const ext = path.extname(filePath)
   const mime = MIME[ext] || 'application/octet-stream'
 
-  if (fs.existsSync(filePath)) {
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     res.writeHead(200, { 'Content-Type': mime })
     fs.createReadStream(filePath).pipe(res)
   } else {
