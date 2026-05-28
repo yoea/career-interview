@@ -21,16 +21,24 @@
 
 .toolbar {
   display: flex;
+  align-items: center;
   gap: 16px;
   margin-bottom: 32px;
 }
 
 .search {
   max-width: 360px;
+  flex: 1;
+
+  :global {
+    .ant-input-search-button {
+      height: 32px;
+    }
+  }
 }
 
 .select {
-  min-width: 160px;
+  min-width: 140px;
 }
 
 .cardLink {
