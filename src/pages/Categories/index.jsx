@@ -43,7 +43,7 @@ export default function Categories() {
 
         <Row gutter={[24, 24]}>
           {groups.map((cat, i) => (
-            <Col key={cat.name} xs={24} sm={12} md={8} lg={6}>
+            <Col key={cat.name} xs={12} sm={12} md={8} lg={6}>
               <a
                 href={`/interviews?broad=${encodeURIComponent(cat.name)}`}
                 className={styles.cardLink}
