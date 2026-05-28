@@ -101,8 +101,51 @@
 }
 
 @media (max-width: 768px) {
+  .inner {
+    padding: 32px 16px 16px;
+  }
+
   .top {
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
+  }
+
+  .brand {
+    min-width: auto;
+  }
+
+  .logoImg {
+    height: 24px;
+  }
+
+  .logoText {
+    font-size: 16px;
+  }
+
+  .brandDesc {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  .col {
+    min-width: auto;
+  }
+
+  .colTitle {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .colLink {
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .divider {
+    margin: 20px 0 12px !important;
+  }
+
+  .copyright {
+    font-size: 12px;
   }
 }

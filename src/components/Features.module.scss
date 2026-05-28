@@ -71,14 +71,50 @@
   margin-bottom: 0 !important;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 768px) {
+  .features {
+    padding: 40px 0;
+  }
+
+  .inner {
+    padding: 0 16px;
+  }
+
+  .heading {
+    margin-bottom: 24px;
+  }
+
+  .title {
+    font-size: 20px !important;
+  }
+
+  .subtitle {
+    font-size: 14px !important;
+  }
+
   .grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
-}
 
-@media (max-width: 576px) {
-  .grid {
-    grid-template-columns: 1fr;
+  .iconWrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    margin: 0 auto 10px;
+  }
+
+  .icon {
+    font-size: 18px;
+  }
+
+  .cardTitle {
+    font-size: 14px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .cardDesc {
+    font-size: 12px !important;
+    line-height: 1.5 !important;
   }
 }

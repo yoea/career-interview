@@ -171,3 +171,70 @@
   color: #4e5969 !important;
   margin-bottom: 0 !important;
 }
+
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 0 40px;
+  }
+
+  .inner {
+    padding: 0 16px;
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .orgCard {
+    margin-bottom: 32px;
+  }
+
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .sectionTitle {
+    font-size: 18px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .introText {
+    font-size: 14px !important;
+    line-height: 1.8 !important;
+  }
+
+  .statIcon {
+    font-size: 20px;
+  }
+
+  .statValue {
+    font-size: 16px !important;
+  }
+
+  .cccaHeader {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cccaRow {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cccaRole {
+    min-width: auto;
+    font-size: 12px;
+  }
+
+  .contactItem {
+    gap: 10px;
+  }
+
+  .contactIcon {
+    font-size: 18px;
+  }
+
+  .contactValue {
+    font-size: 14px !important;
+  }
+}

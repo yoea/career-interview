@@ -83,3 +83,40 @@
   margin-bottom: 0 !important;
   line-height: 1.6 !important;
 }
+
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 0 40px;
+  }
+
+  .inner {
+    padding: 0 12px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .card {
+    min-height: 150px;
+  }
+
+  .iconWrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+
+  .icon {
+    font-size: 20px;
+  }
+
+  .catName {
+    font-size: 14px !important;
+  }
+
+  .catDesc {
+    font-size: 12px !important;
+  }
+}

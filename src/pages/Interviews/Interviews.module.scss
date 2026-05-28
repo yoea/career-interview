@@ -113,3 +113,50 @@
   justify-content: center;
   margin-top: 40px;
 }
+
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 0 40px;
+  }
+
+  .inner {
+    padding: 0 12px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    font-size: 13px !important;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .search {
+    max-width: 100%;
+  }
+
+  .select {
+    min-width: 100%;
+  }
+
+  .cardTitle {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .cardMeta {
+    font-size: 12px;
+    gap: 12px;
+  }
+
+  .duration {
+    font-size: 11px;
+    padding: 1px 5px;
+  }
+}

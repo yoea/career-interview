@@ -6,6 +6,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -22,4 +23,31 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+// Prevent iOS zoom on input focus (font-size must be >= 16px)
+input,
+textarea,
+select,
+.ant-input,
+.ant-select-selector,
+.ant-input-search,
+.ant-input-affix-wrapper {
+  font-size: 16px !important;
+}
+
+@media (max-width: 768px) {
+  // Tighter spacing on mobile
+  body {
+    font-size: 14px;
+  }
+
+  // Ant Design mobile tweaks
+  .ant-card-body {
+    padding: 16px !important;
+  }
+
+  .ant-pagination {
+    margin-top: 24px !important;
+  }
 }
