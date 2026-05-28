@@ -6,7 +6,7 @@ import {
   faUsers,
   faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
-import { videos, categories, seasonStats } from '../data/videos'
+import { videos, categories, totalPlays } from '../data/videos'
 import styles from './Features.module.scss'
 
 const { Title, Paragraph } = Typography
@@ -29,8 +29,8 @@ const features = [
   },
   {
     icon: faChartLine,
-    title: `${(seasonStats.totalViews / 10000).toFixed(1)} 万次观看`,
-    desc: '合集累计播放，帮助更多青少年获取真实的职业信息和人生经验。',
+    title: `${(totalPlays / 10000).toFixed(1)} 万次播放`,
+    desc: '视频总播放数，帮助更多青少年获取真实的职业信息和人生经验。',
   },
 ]
 
@@ -39,7 +39,7 @@ export default function Features() {
     <section className={styles.features}>
       <div className={styles.inner}>
         <div className={styles.heading}>
-          <Title level={2} className={styles.title}>为什么选择生涯访谈</Title>
+          <Title level={2} className={styles.title}>生涯访谈概况</Title>
           <Paragraph className={styles.subtitle}>
             新华生涯教育 CCCA 体系之「咨询」支柱项目
           </Paragraph>

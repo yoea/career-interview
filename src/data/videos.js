@@ -1,6 +1,6 @@
 import rawVideos from './videos.json'
 
-const CACHE_KEY = 'xwzw_videos_cache'
+const CACHE_KEY = 'xwzw_videos_cache_v2'
 const FETCH_INTERVAL = 1 * 60 * 60 * 1000 // 1 hour
 const API_BASE = '/api/bili'
 const SEASON_ID = 131230
@@ -123,10 +123,46 @@ async function backgroundFetch(existingRaw) {
   }
 }
 
-// ─── Profession extraction ───────────────────────────────────────
+// ─── Profession extraction & normalization ───────────────────────
+const PROFESSION_OVERRIDES = {
+  '珍珠生访王亚丽（第40届南丁格尔奖章中国得主之一）': '护士',
+  '珍珠生访陈笠先生': '教育公益',
+  '珍珠学长': '教育公益',
+  '高考志愿填报指导暨高中教师': '高中教师',
+  '心理咨询师&教师': '心理咨询师',
+  '甘肃省民勤县第四中学副校长': '校长',
+  '高中心理老师': '心理教师',
+  '走近文秘工作者': '文秘',
+  '走近博士研究生': '博士研究生',
+  '高中思政教师': '思政教师',
+  '县域房地产销售人员': '房地产销售',
+  '民营农业科技企业家': '农业科技企业家',
+  '驻村干部': '公务员',
+  '一起走进高中校长': '校长',
+  '走近文秘工作者': '文秘',
+}
+
+function cleanProfession(raw) {
+  // Manual override
+  if (PROFESSION_OVERRIDES[raw]) return PROFESSION_OVERRIDES[raw]
+
+  let p = raw
+  // Remove prefixes
+  p = p.replace(/^一起走进/, '')
+  p = p.replace(/^走近/, '')
+  // Remove parenthetical notes
+  p = p.replace(/（.*?）/g, '')
+  p = p.replace(/\(.*?\)/g, '')
+  // Remove person-name suffixes (先生/女士/访谈 after a name)
+  p = p.replace(/访[^\u4e00-\u9fa5]*$/, '')
+  // Trim
+  return p.trim() || raw
+}
+
 function extractProfession(title) {
   const match = title.match(/生涯人物访谈[\s|丨|｜]+(.+?)(?:访谈录|访谈)?$/)
-  return match ? match[1].trim() : title.replace(/生涯人物访谈[\s|丨|｜]*/, '').trim()
+  const raw = match ? match[1].trim() : title.replace(/生涯人物访谈[\s|丨|｜]*/, '').trim()
+  return cleanProfession(raw)
 }
 
 export function formatPlayCount(n) {
