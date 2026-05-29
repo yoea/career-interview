@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Typography, Card, Row, Col, Tag, Input, Select, Pagination } from 'antd'
+import { Typography, Card, Row, Col, Tag, Input, Select, Segmented, Pagination } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClock, faPlay, faComment } from '@fortawesome/free-solid-svg-icons'
+import { faClock, faPlay, faComment, faArrowDownWideShort } from '@fortawesome/free-solid-svg-icons'
 import { videos, formatPlayCount, categories } from '../../data/videos'
 import styles from './Interviews.module.scss'
 
@@ -20,6 +20,7 @@ export default function Interviews() {
   // If URL has broad category, don't set specific category filter
   const [category, setCategory] = useState(urlBroad ? null : (urlCategory || null))
   const [broadFilter] = useState(urlBroad || null)
+  const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(1)
 
   const filtered = videos.filter(v => {
@@ -29,7 +30,14 @@ export default function Interviews() {
     return matchSearch && matchCategory && matchBroad
   })
 
-  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const sorted = [...filtered].sort((a, b) => {
+    if (sort === 'newest') return b.created - a.created
+    if (sort === 'play') return b.play - a.play
+    if (sort === 'title') return a.title.localeCompare(b.title, 'zh')
+    return 0
+  })
+
+  const paged = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   const handleCategoryChange = (val) => {
     setCategory(val)
@@ -77,6 +85,16 @@ export default function Interviews() {
             value={category}
             options={categories.map(c => ({ label: c, value: c }))}
             onChange={handleCategoryChange}
+          />
+          <Segmented
+            className={styles.sort}
+            value={sort}
+            onChange={v => { setSort(v); setPage(1) }}
+            options={[
+              { label: '最新', value: 'newest' },
+              { label: '最热', value: 'play' },
+              { label: '名称', value: 'title' },
+            ]}
           />
         </div>
 

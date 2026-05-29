@@ -35,6 +35,10 @@
   min-width: 140px;
 }
 
+.sort {
+  flex-shrink: 0;
+}
+
 .cardLink {
   display: block;
   text-decoration: none;
@@ -145,6 +149,10 @@
 
   .select {
     min-width: 100%;
+  }
+
+  .sort {
+    width: 100%;
   }
 
   .cardTitle {

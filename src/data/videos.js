@@ -222,6 +222,7 @@ function processVideos(source) {
       length: v.length,
       play: v.play,
       comment: v.comment,
+      created: v.created,
       date: formatDate(v.created),
     }))
     .sort((a, b) => b.play - a.play)
