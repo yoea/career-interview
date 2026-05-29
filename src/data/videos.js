@@ -1,6 +1,6 @@
 import rawVideos from './videos.json'
 
-const CACHE_KEY = 'xwzw_videos_cache_v2'
+const CACHE_KEY = 'xwzw_videos_cache_v3'
 const FETCH_INTERVAL = 1 * 60 * 60 * 1000 // 1 hour
 const API_BASE = '/api/bili'
 const SEASON_ID = 131230
@@ -12,8 +12,8 @@ function getCached() {
     const raw = localStorage.getItem(CACHE_KEY)
     if (!raw) return null
     const { data, timestamp } = JSON.parse(raw)
-    // Validate: must be array with expected fields
-    if (!Array.isArray(data) || !data[0]?.profession) {
+    // Validate: must be array with expected fields (including topic)
+    if (!Array.isArray(data) || !data[0]?.profession || !data[0]?.topic) {
       localStorage.removeItem(CACHE_KEY)
       return null
     }
