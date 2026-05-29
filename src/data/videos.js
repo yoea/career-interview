@@ -207,6 +207,36 @@ function getCategoryMeta(name) {
 }
 
 // ─── Process videos ──────────────────────────────────────────────
+// ─── Topic normalization ──────────────────────────────────────────
+const TOPIC_KEYWORDS = [
+  { topic: '教师', keywords: ['教师', '校长', '辅导员', '教授', '老师', '生涯规划', '职业规划'] },
+  { topic: '律师', keywords: ['律师'] },
+  { topic: '医生', keywords: ['医生', '外科', '中医', '医学', '医疗', '医药', '医院', '护士', '南丁格尔'] },
+  { topic: '心理咨询', keywords: ['心理咨询', '心理学', '心理教师'] },
+  { topic: '程序员', keywords: ['程序员', '软件', '计算机', '大数据', '芯片', '人工智能', '自动驾驶', '物联网', '自动化', '互联网运营'] },
+  { topic: '企业家', keywords: ['企业家', '创业', '创业者', '房地产'] },
+  { topic: '金融', keywords: ['银行', '金融', '保险', '财富', '税务', '审计'] },
+  { topic: '科研', keywords: ['科研', '航空科学', '学者', '博士', '科普'] },
+  { topic: '记者', keywords: ['记者', '新闻', '主持', '传媒', '媒体', '宣传'] },
+  { topic: '警察', keywords: ['警察'] },
+  { topic: '军人', keywords: ['军人', '维和', '老兵', '军旅', '部队'] },
+  { topic: '公务员', keywords: ['公务员', '驻村'] },
+  { topic: '消防员', keywords: ['消防'] },
+  { topic: '环保', keywords: ['环保', '再生'] },
+  { topic: '诗人·作家', keywords: ['诗人', '作家', '写作'] },
+  { topic: '文秘', keywords: ['文秘'] },
+  { topic: '数据分析师', keywords: ['数据分析', '数据管理'] },
+  { topic: '物流', keywords: ['物流'] },
+  { topic: '教育公益', keywords: ['教育公益', '珍珠'] },
+]
+
+function normalizeTopic(profession) {
+  for (const rule of TOPIC_KEYWORDS) {
+    if (rule.keywords.some(kw => profession.includes(kw))) return rule.topic
+  }
+  return profession
+}
+
 function processVideos(source) {
   const interviewVideos = source.filter(v =>
     v.title.includes('生涯人物访谈') || v.title.includes('生涯人物访谈丨') || v.title.includes('生涯人物访谈|')
@@ -216,6 +246,7 @@ function processVideos(source) {
       id: v.bvid,
       title: v.title,
       profession: extractProfession(v.title),
+      topic: normalizeTopic(extractProfession(v.title)),
       category: categorize(extractProfession(v.title)),
       url: v.url,
       cover: v.pic,
@@ -277,41 +308,10 @@ export function getBroadCategories() {
 }
 
 export function getVideosByCategory() {
-  // Topic normalization: group similar professions under broader topics
-  const TOPIC_KEYWORDS = [
-    { topic: '教师', keywords: ['教师', '校长', '辅导员', '教授', '老师', '生涯规划', '职业规划'] },
-    { topic: '律师', keywords: ['律师'] },
-    { topic: '医生', keywords: ['医生', '外科', '中医', '医学', '医疗', '医药', '医院', '护士', '南丁格尔'] },
-    { topic: '心理咨询', keywords: ['心理咨询', '心理学', '心理教师'] },
-    { topic: '程序员', keywords: ['程序员', '软件', '计算机', '大数据', '芯片', '人工智能', '自动驾驶', '物联网', '自动化', '互联网运营'] },
-    { topic: '企业家', keywords: ['企业家', '创业', '创业者', '房地产'] },
-    { topic: '金融', keywords: ['银行', '金融', '保险', '财富', '税务', '审计'] },
-    { topic: '科研', keywords: ['科研', '航空科学', '学者', '博士', '科普'] },
-    { topic: '记者', keywords: ['记者', '新闻', '主持', '传媒', '媒体', '宣传'] },
-    { topic: '警察', keywords: ['警察'] },
-    { topic: '军人', keywords: ['军人', '维和', '老兵', '军旅', '部队'] },
-    { topic: '公务员', keywords: ['公务员', '驻村'] },
-    { topic: '消防员', keywords: ['消防'] },
-    { topic: '环保', keywords: ['环保', '再生'] },
-    { topic: '诗人·作家', keywords: ['诗人', '作家', '写作'] },
-    { topic: '文秘', keywords: ['文秘'] },
-    { topic: '数据分析师', keywords: ['数据分析', '数据管理'] },
-    { topic: '物流', keywords: ['物流'] },
-    { topic: '教育公益', keywords: ['教育公益', '珍珠'] },
-  ]
-
-  function normalizeTopic(profession) {
-    for (const rule of TOPIC_KEYWORDS) {
-      if (rule.keywords.some(kw => profession.includes(kw))) return rule.topic
-    }
-    return profession
-  }
-
   const map = {}
   for (const v of videos) {
-    const topic = normalizeTopic(v.profession)
-    if (!map[topic]) map[topic] = []
-    map[topic].push(v)
+    if (!map[v.topic]) map[v.topic] = []
+    map[v.topic].push(v)
   }
   return Object.entries(map)
     .map(([name, items]) => ({ name, count: items.length, videos: items }))

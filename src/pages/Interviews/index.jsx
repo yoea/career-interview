@@ -15,11 +15,13 @@ export default function Interviews() {
   const [searchParams, setSearchParams] = useSearchParams()
   const urlCategory = searchParams.get('category')
   const urlBroad = searchParams.get('broad')
+  const urlTopic = searchParams.get('topic')
 
   const [search, setSearch] = useState('')
   // If URL has broad category, don't set specific category filter
   const [category, setCategory] = useState(urlBroad ? null : (urlCategory || null))
   const [broadFilter] = useState(urlBroad || null)
+  const [topicFilter] = useState(urlTopic || null)
   const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(1)
 
@@ -27,7 +29,8 @@ export default function Interviews() {
     const matchSearch = !search || v.title.includes(search) || v.profession.includes(search)
     const matchCategory = !category || v.profession === category
     const matchBroad = !broadFilter || v.category === broadFilter
-    return matchSearch && matchCategory && matchBroad
+    const matchTopic = !topicFilter || v.topic === topicFilter
+    return matchSearch && matchCategory && matchBroad && matchTopic
   })
 
   const sorted = [...filtered].sort((a, b) => {
@@ -50,17 +53,21 @@ export default function Interviews() {
     }
   }
 
-  const headerTitle = broadFilter
-    ? `${broadFilter} · 访谈内容`
-    : category
-      ? `${category} · 访谈内容`
-      : '访谈内容'
+  const headerTitle = topicFilter
+    ? `${topicFilter} · 访谈内容`
+    : broadFilter
+      ? `${broadFilter} · 访谈内容`
+      : category
+        ? `${category} · 访谈内容`
+        : '访谈内容'
 
-  const headerSub = broadFilter
-    ? `共 ${filtered.length} 期「${broadFilter}」相关访谈`
-    : category
-      ? `共 ${filtered.length} 期「${category}」相关访谈`
-      : `共 ${videos.length} 期访谈，覆盖 ${categories.length} 个职业领域`
+  const headerSub = topicFilter
+    ? `共 ${filtered.length} 期「${topicFilter}」相关访谈`
+    : broadFilter
+      ? `共 ${filtered.length} 期「${broadFilter}」相关访谈`
+      : category
+        ? `共 ${filtered.length} 期「${category}」相关访谈`
+        : `共 ${videos.length} 期访谈，覆盖 ${categories.length} 个职业领域`
 
   return (
     <div className={styles.page}>

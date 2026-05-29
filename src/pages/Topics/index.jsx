@@ -73,7 +73,7 @@ export default function Topics() {
           {filtered.map((topic, i) => (
             <a
               key={topic.name}
-              href={`/interviews?category=${encodeURIComponent(topic.name)}`}
+              href={`/interviews?topic=${encodeURIComponent(topic.name)}`}
               className={styles.tag}
               style={{
                 fontSize: `${getFontSize(topic.count)}px`,
