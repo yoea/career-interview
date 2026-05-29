@@ -15,10 +15,10 @@ npm run build
 ### 2. 启动
 
 ```bash
-node server.mjs
+node deploy/server.mjs
 ```
 
-默认端口 3000，可通过 `PORT=8080 node server.mjs` 修改。
+默认端口 3000，可通过 `PORT=8080 node deploy/server.mjs` 修改。
 
 ### 3. 访问
 
@@ -37,7 +37,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/home/ethan/career-interview
-ExecStart=/usr/bin/node server.mjs
+ExecStart=/usr/bin/node deploy/server.mjs
 Restart=always
 Environment=PORT=3000
 

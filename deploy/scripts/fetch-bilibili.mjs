@@ -2,7 +2,7 @@
  * Bilibili video data fetcher
  * Fetches video details from Bilibili API and saves to local JSON
  *
- * Usage: node scripts/fetch-bilibili.mjs
+ * Usage: node deploy/scripts/fetch-bilibili.mjs
  * Run periodically (e.g., weekly cron) to update video data
  */
 
@@ -11,8 +11,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const OUTPUT_PATH = path.join(__dirname, '../database/bilibili_career_videos.json')
-const FRONTEND_DATA = path.join(__dirname, '../src/data/videos.json')
+const OUTPUT_PATH = path.join(__dirname, '../../database/bilibili_career_videos.json')
+const FRONTEND_DATA = path.join(__dirname, '../../src/data/videos.json')
 
 const MID = 395341214       // 新华教育基金会 UID
 const SEASON_ID = 131230    // 合集 ID

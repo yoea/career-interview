@@ -13,7 +13,7 @@ NC='\033[0m'
 info() { echo -e "${GREEN}▸${NC} $*"; }
 warn() { echo -e "${YELLOW}▸${NC} $*"; }
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 # Step 1: Build
 info "Building..."
@@ -28,13 +28,14 @@ info "Static files uploaded."
 # Step 3: Upload server files (only if changed)
 NEED_RESTART=false
 
-for f in server.mjs ecosystem.config.cjs; do
+for f in deploy/server.mjs deploy/ecosystem.config.cjs; do
   LOCAL_HASH=$(md5sum "$f" 2>/dev/null | cut -d' ' -f1)
-  REMOTE_HASH=$(ssh "$REMOTE" "md5sum $REMOTE_DIR/$f 2>/dev/null | cut -d' ' -f1" || true)
+  BASENAME=$(basename "$f")
+  REMOTE_HASH=$(ssh "$REMOTE" "md5sum $REMOTE_DIR/$BASENAME 2>/dev/null | cut -d' ' -f1" || true)
   if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
-    info "Uploading $f (changed)..."
-    scp "$f" "$REMOTE:/tmp/$f" 2>/dev/null
-    ssh "$REMOTE" "echo $SUDO_PASS | sudo -S cp /tmp/$f $REMOTE_DIR/$f"
+    info "Uploading $BASENAME (changed)..."
+    scp "$f" "$REMOTE:/tmp/$BASENAME" 2>/dev/null
+    ssh "$REMOTE" "echo $SUDO_PASS | sudo -S cp /tmp/$BASENAME $REMOTE_DIR/$BASENAME"
     NEED_RESTART=true
   fi
 done
