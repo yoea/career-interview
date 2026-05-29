@@ -14,6 +14,14 @@ export default defineConfig({
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         },
       },
+      '/api/wechat-qr': {
+        target: 'https://xhef.oss-cn-hangzhou.aliyuncs.com',
+        changeOrigin: true,
+        rewrite: () => '/xhef/base_data/owe/aboutus/XHEF_wx.png',
+        headers: {
+          'Referer': 'https://www.xhef.org',
+        },
+      },
     },
   },
 })

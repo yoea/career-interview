@@ -77,6 +77,30 @@ function serveStatic(res, filePath) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`)
 
+  // WeChat QR code proxy (OSS requires specific Referer)
+  if (url.pathname === '/api/wechat-qr') {
+    try {
+      const result = await new Promise((resolve, reject) => {
+        https.get('https://xhef.oss-cn-hangzhou.aliyuncs.com/xhef/base_data/owe/aboutus/XHEF_wx.png', {
+          headers: { Referer: 'https://www.xhef.org' },
+        }, (r) => {
+          const chunks = []
+          r.on('data', c => chunks.push(c))
+          r.on('end', () => resolve({ status: r.statusCode, data: Buffer.concat(chunks) }))
+        }).on('error', reject)
+      })
+      res.writeHead(result.status, {
+        'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=86400',
+      })
+      res.end(result.data)
+    } catch (e) {
+      res.writeHead(502)
+      res.end('proxy error')
+    }
+    return
+  }
+
   // API proxy: /api/bili/*
   if (url.pathname.startsWith('/api/bili/')) {
     const apiPath = url.pathname.replace('/api/bili', '') + url.search
