@@ -16,14 +16,14 @@ warn() { echo -e "${YELLOW}▸${NC} $*"; }
 cd "$(dirname "$0")/.."
 
 # Step 1: Build
-info "Building..."
+info "构建中..."
 npm run build 2>&1 | tail -3
 
 # Step 2: Upload static files
-info "Uploading dist/..."
+info "上传 dist/..."
 rsync -avz --delete dist/ "$REMOTE:/tmp/career-dist/" 2>/dev/null | tail -1
 ssh "$REMOTE" "echo $SUDO_PASS | sudo -S cp -r /tmp/career-dist/* $REMOTE_DIR/index/"
-info "Static files uploaded."
+info "静态文件上传完成"
 
 # Step 3: Upload server files (only if changed)
 NEED_RESTART=false
@@ -33,7 +33,7 @@ for f in deploy/server.mjs deploy/ecosystem.config.cjs; do
   BASENAME=$(basename "$f")
   REMOTE_HASH=$(ssh "$REMOTE" "md5sum $REMOTE_DIR/$BASENAME 2>/dev/null | cut -d' ' -f1" || true)
   if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
-    info "Uploading $BASENAME (changed)..."
+    info "上传 $BASENAME（有变更）..."
     scp "$f" "$REMOTE:/tmp/$BASENAME" 2>/dev/null
     ssh "$REMOTE" "echo $SUDO_PASS | sudo -S cp /tmp/$BASENAME $REMOTE_DIR/$BASENAME"
     NEED_RESTART=true
@@ -42,16 +42,16 @@ done
 
 # Step 4: Restart pm2 if needed
 if $NEED_RESTART; then
-  warn "Restarting pm2..."
+  warn "重启 pm2..."
   ssh "$REMOTE" "pm2 restart career-interview" 2>/dev/null | grep -E 'status|online'
 else
-  info "Server files unchanged, skipping restart."
+  info "服务端文件无变更，跳过重启"
 fi
 
 # Step 5: Verify
 STATUS=$(ssh "$REMOTE" "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:35173/")
 if [ "$STATUS" = "200" ]; then
-  info "Done! https://career.ewing.top:35173 ✓"
+  info "部署完成！https://career.ewing.top:35173 ✓"
 else
-  warn "Health check failed (HTTP $STATUS), check pm2 logs."
+  warn "健康检查失败（HTTP $STATUS），请检查 pm2 日志"
 fi
