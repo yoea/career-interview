@@ -1,4 +1,5 @@
 import rawVideos from './videos.json'
+import TOPIC_KEYWORDS from '../config/topics.json'
 
 const CACHE_KEY = 'xwzw_videos_cache_v3'
 const FETCH_INTERVAL = 1 * 60 * 60 * 1000 // 1 hour
@@ -207,73 +208,7 @@ function getCategoryMeta(name) {
 }
 
 // ─── Process videos ──────────────────────────────────────────────
-// ─── Topic normalization ──────────────────────────────────────────
-const TOPIC_KEYWORDS = [
-  // 教育类细分
-  { topic: '高中教师', keywords: ['高中教师', '高中数学教师', '高中思政教师', '高中心理老师', '历史教师'] },
-  { topic: '教师', keywords: ['教师'] },
-  { topic: '校长', keywords: ['校长'] },
-  { topic: '大学辅导员', keywords: ['辅导员'] },
-  { topic: '数学教授', keywords: ['数学教授'] },
-  { topic: '生涯规划师', keywords: ['生涯规划', '职业规划'] },
-  // 医疗类细分
-  { topic: '外科医生', keywords: ['外科'] },
-  { topic: '中医', keywords: ['中医'] },
-  { topic: '医生', keywords: ['医生'] },
-  { topic: '护士', keywords: ['护士', '南丁格尔'] },
-  { topic: '医学博士', keywords: ['医学博士'] },
-  { topic: '医学美容', keywords: ['医学美容'] },
-  { topic: '医药编辑', keywords: ['医药编辑'] },
-  { topic: '医疗推广', keywords: ['医疗推广'] },
-  { topic: '医院管理', keywords: ['医院系统', '民勤县中医院'] },
-  // IT类细分
-  { topic: '软件工程师', keywords: ['程序员', '软件', '计算机'] },
-  { topic: '人工智能', keywords: ['人工智能', '自动驾驶'] },
-  { topic: '大数据', keywords: ['大数据'] },
-  { topic: '芯片工程师', keywords: ['芯片'] },
-  { topic: '物联网', keywords: ['物联网'] },
-  { topic: '自动化', keywords: ['自动化'] },
-  { topic: '互联网运营', keywords: ['互联网运营'] },
-  // 金融类细分
-  { topic: '银行', keywords: ['银行'] },
-  { topic: '金融保险', keywords: ['金融保险', '保险'] },
-  { topic: '财富规划师', keywords: ['财富'] },
-  { topic: '税务审计', keywords: ['税务', '审计'] },
-  // 企业类细分
-  { topic: '民营企业家', keywords: ['民营企业家', '民营农业科技企业家'] },
-  { topic: '自主创业', keywords: ['自主创业', '创业者'] },
-  { topic: '房地产', keywords: ['房地产'] },
-  // 媒体类细分
-  { topic: '记者', keywords: ['记者', '新闻记者'] },
-  { topic: '主持人', keywords: ['主持'] },
-  { topic: '传媒人', keywords: ['传媒', '媒体', '宣传'] },
-  // 心理类
-  { topic: '心理咨询师', keywords: ['心理咨询'] },
-  { topic: '心理学家', keywords: ['心理学', '心理学家'] },
-  { topic: '心理教师', keywords: ['心理教师'] },
-  // 科研类细分
-  { topic: '航空科学家', keywords: ['航空科学'] },
-  { topic: '科研人员', keywords: ['科研'] },
-  { topic: '学者', keywords: ['学者'] },
-  { topic: '博士研究生', keywords: ['博士'] },
-  { topic: '科普工作者', keywords: ['科普'] },
-  // 其他职业
-  { topic: '律师', keywords: ['律师'] },
-  { topic: '检察官', keywords: ['检察官'] },
-  { topic: '法官助理', keywords: ['法官助理'] },
-  { topic: '警察', keywords: ['警察'] },
-  { topic: '消防员', keywords: ['消防'] },
-  { topic: '军人', keywords: ['军人', '维和', '老兵', '军旅', '部队'] },
-  { topic: '公务员', keywords: ['公务员', '驻村'] },
-  { topic: '环保', keywords: ['环保', '再生'] },
-  { topic: '诗人·作家', keywords: ['诗人', '作家', '写作'] },
-  { topic: '文秘', keywords: ['文秘'] },
-  { topic: '数据分析师', keywords: ['数据分析', '数据管理'] },
-  { topic: '物流', keywords: ['物流'] },
-  { topic: '设备与化工', keywords: ['设备', '化工'] },
-  { topic: '交通工程', keywords: ['交通'] },
-  { topic: '教育公益', keywords: ['教育公益', '珍珠'] },
-]
+// TOPIC_KEYWORDS loaded from src/config/topics.json
 
 function normalizeTopic(profession) {
   for (const rule of TOPIC_KEYWORDS) {
