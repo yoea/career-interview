@@ -90,7 +90,10 @@ export default function Interviews() {
             allowClear
             className={styles.select}
             value={category}
-            options={categories.map(c => ({ label: c, value: c }))}
+            options={(broadFilter
+              ? [...new Set(videos.filter(v => v.category === broadFilter).map(v => v.profession))].sort()
+              : categories
+            ).map(c => ({ label: c, value: c }))}
             onChange={handleCategoryChange}
           />
           <Segmented
