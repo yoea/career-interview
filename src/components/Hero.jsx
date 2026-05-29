@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Typography, Space } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faThLarge } from '@fortawesome/free-solid-svg-icons'
-import { videos, totalPlays } from '../data/videos'
+// videos import removed — stats moved to Features section
 import styles from './Hero.module.scss'
 
 const { Title, Paragraph, Text } = Typography
@@ -30,17 +30,7 @@ export default function Hero() {
               职业分类
             </Button>
           </Space>
-          <div className={styles.stats}>
-            <div className={styles.statItem}>
-              <span className={styles.statNum}>{videos.length}+</span>
-              <span className={styles.statLabel}>访谈视频</span>
-            </div>
-            <div className={styles.statDivider} />
-            <div className={styles.statItem}>
-              <span className={styles.statNum}>{(totalPlays / 10000).toFixed(1)}万+</span>
-              <span className={styles.statLabel}>累计播放</span>
-            </div>
-          </div>
+
         </div>
       </div>
     </section>
