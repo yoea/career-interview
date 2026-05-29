@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Layout, Typography, Space, Divider, Tooltip, message } from 'antd'
+import { Layout, Typography, Space, Divider, Tooltip, Popover, message } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faWeixin, faWeibo } from '@fortawesome/free-brands-svg-icons'
@@ -60,9 +60,13 @@ export default function Footer() {
               探索职业的无限可能，聆听每一个职业故事。
             </Text>
             <Space size="middle" className={styles.socials}>
-              <Tooltip title="公众号：新华爱心教育基金会">
+              <Popover
+                content={<img src="https://xhef.oss-cn-hangzhou.aliyuncs.com/xhef/base_data/owe/aboutus/XHEF_wx.png" alt="微信公众号二维码" referrerPolicy="no-referrer" style={{ width: 160, display: 'block' }} />}
+                trigger="hover"
+                placement="top"
+              >
                 <FontAwesomeIcon icon={faWeixin} className={styles.socialIcon} />
-              </Tooltip>
+              </Popover>
               <Tooltip title="@新华爱心教育基金会">
                 <a href="https://weibo.com/xhcef" target="_blank" rel="noopener noreferrer">
                   <FontAwesomeIcon icon={faWeibo} className={styles.socialIcon} />
