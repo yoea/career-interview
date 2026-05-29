@@ -16,8 +16,8 @@ export default function Hero() {
         <div className={styles.content}>
           <Text className={styles.tag}>🎙️ 寻路记·新华生涯访谈</Text>
           <Title className={styles.title}>
-            探索职业的
-            <span className={styles.highlight}>无限可能</span>
+            对话生涯人物
+            <span className={styles.highlight}>指引自我人生</span>
           </Title>
           <Paragraph className={styles.desc}>
             一群西北、西南地区的高中生，在爱心捐方的支持下，由学校老师带领，采访各行各业的职场人士，主动规划自己的未来！

@@ -11,7 +11,6 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const OUTPUT_PATH = path.join(__dirname, '../../database/bilibili_career_videos.json')
 const FRONTEND_DATA = path.join(__dirname, '../../src/data/videos.json')
 
 const MID = 395341214       // 新华教育基金会 UID
@@ -102,8 +101,8 @@ async function main() {
 
   // Load existing data to avoid re-fetching unchanged videos
   let existing = []
-  if (fs.existsSync(OUTPUT_PATH)) {
-    existing = JSON.parse(fs.readFileSync(OUTPUT_PATH, 'utf-8'))
+  if (fs.existsSync(FRONTEND_DATA)) {
+    existing = JSON.parse(fs.readFileSync(FRONTEND_DATA, 'utf-8'))
   }
   const existingMap = new Map(existing.map(v => [v.aid, v]))
 
@@ -160,13 +159,10 @@ async function main() {
   // Attach meta to each video
   const output = results.map(v => ({ ...v, meta: seasonMeta }))
 
-  // Write to both locations
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2))
   fs.writeFileSync(FRONTEND_DATA, JSON.stringify(output, null, 2))
 
   console.log(`\n\nDone! ${output.length} videos saved.`)
-  console.log(`  Database: ${OUTPUT_PATH}`)
-  console.log(`  Frontend: ${FRONTEND_DATA}`)
+  console.log(`  Data: ${FRONTEND_DATA}`)
 }
 
 main().catch(e => {

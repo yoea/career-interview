@@ -1,8 +1,8 @@
 # 寻路记 · 新华生涯访谈
 
-公益生涯教育视频平台，展示 95 期 B站生涯人物访谈视频，支持职业分类浏览、话题筛选和自动数据刷新。
+公益生涯教育视频平台，展示 95 期 B站生涯人物访谈视频。对话生涯人物，指引自我人生。
 
-🔗 线上地址：https://career.ewing.top:35173
+🔗 线上地址：https://career.ewing.top
 
 ## 技术栈
 
@@ -25,8 +25,8 @@ npm run build    # 构建到 dist/
 │   ├── components/    # 公共组件 (Header, Footer, Hero, Features)
 │   ├── pages/         # 页面 (首页, 访谈列表, 分类, 话题, 关于, 条款, 隐私)
 │   ├── data/          # 视频数据 + 缓存/刷新逻辑
+│   ├── config/        # 配置 (话题分类规则)
 │   └── styles/        # 全局样式
-├── database/          # B站原始数据 JSON
 ├── public/            # 静态资源 (logo, favicon)
 ├── deploy/            # 部署相关
 │   ├── deploy.sh      # 一键部署脚本

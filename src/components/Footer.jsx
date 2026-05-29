@@ -57,7 +57,7 @@ export default function Footer() {
               <span className={styles.logoText}>寻路记·新华生涯访谈</span>
             </div>
             <Text className={styles.brandDesc}>
-              探索职业的无限可能，聆听每一个职业故事。
+              对话生涯人物，指引自我人生。
             </Text>
             <Space size="middle" className={styles.socials}>
               <Popover
