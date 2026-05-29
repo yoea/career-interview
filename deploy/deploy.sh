@@ -51,7 +51,7 @@ fi
 # Step 5: Verify
 STATUS=$(ssh "$REMOTE" "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:35173/")
 if [ "$STATUS" = "200" ]; then
-  info "部署完成！https://career.ewing.top:35173 ✓"
+  info "部署完成！https://career.ewing.top ✓"
 else
   warn "健康检查失败（HTTP $STATUS），请检查 pm2 日志"
 fi
