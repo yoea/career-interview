@@ -2,7 +2,7 @@ import rawVideos from './videos.json'
 import TOPIC_KEYWORDS from '../config/topics.json'
 
 const CACHE_KEY = 'xwzw_videos_cache_v3'
-const FETCH_INTERVAL = 1 * 60 * 60 * 1000 // 1 hour
+const FETCH_INTERVAL = 10 * 60 * 1000 // 10 minutes
 const API_BASE = '/api/bili'
 const SEASON_ID = 131230
 const MID = 395341214
@@ -284,7 +284,11 @@ export function getBroadCategories() {
   }
   return Object.values(map)
     .map(c => ({ ...c, ...getCategoryMeta(c.name) }))
-    .sort((a, b) => b.count - a.count)
+    .sort((a, b) => {
+      if (a.name === '其他') return 1
+      if (b.name === '其他') return -1
+      return b.count - a.count
+    })
 }
 
 export function getVideosByCategory() {

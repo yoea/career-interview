@@ -16,7 +16,7 @@ export default function Hero() {
         <div className={styles.content}>
           <Text className={styles.tag}>🎙️ 寻路记·新华生涯访谈</Text>
           <Title className={styles.title}>
-            对话生涯人物
+            对话生涯人物，
             <span className={styles.highlight}>指引自我人生</span>
           </Title>
           <Paragraph className={styles.desc}>
