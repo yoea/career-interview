@@ -1,4 +1,3 @@
-import rawVideos from './videos.json'
 import TOPIC_KEYWORDS from '../config/topics.json'
 
 const CACHE_KEY = 'xwzw_videos_cache_v3'
@@ -32,6 +31,13 @@ function setCache(data) {
 
 function isStale(timestamp) {
   return !timestamp || Date.now() - timestamp > FETCH_INTERVAL
+}
+
+// ─── Fetch videos.json from public ───────────────────────────────
+async function fetchLocalVideos() {
+  const res = await fetch('/data/videos.json')
+  if (!res.ok) throw new Error(`Failed to fetch videos.json: ${res.status}`)
+  return res.json()
 }
 
 // ─── Background fetch from Bilibili API ──────────────────────────
@@ -242,38 +248,67 @@ function processVideos(source) {
 // ─── Initialize ──────────────────────────────────────────────────
 const cached = getCached()
 let initialData
+let rawVideos = []
 
 if (cached && !isStale(cached.timestamp)) {
   // Fresh cache — use processed data directly
   initialData = cached.data
+  // Also load raw for backgroundFetch
+  fetchLocalVideos().then(data => { rawVideos = data }).catch(() => {})
 } else {
-  // No cache or stale — process bundled JSON, then refresh in background
-  initialData = processVideos(rawVideos)
-  setCache(initialData)
-
-  if (typeof window !== 'undefined') {
-    // Pass rawVideos so backgroundFetch can merge with existing raw data
-    setTimeout(() => backgroundFetch(rawVideos), 2000)
-  }
+  // No cache or stale — fetch from public JSON
+  initialData = [] // Will be populated async
 }
 
 export const videos = [...initialData]
 
-// Season stats (from bundled JSON, stable)
-const meta = rawVideos[0]?.meta
+// Async initialization
+;(async () => {
+  if (!cached || isStale(cached.timestamp)) {
+    try {
+      rawVideos = await fetchLocalVideos()
+      const processed = processVideos(rawVideos)
+      setCache(processed)
+      videos.length = 0
+      videos.push(...processed)
+    } catch (e) {
+      console.warn('[data] Failed to fetch videos.json:', e.message)
+    }
+  }
+
+  // Background refresh from Bilibili API
+  if (typeof window !== 'undefined') {
+    setTimeout(() => backgroundFetch(rawVideos), 2000)
+  }
+})()
+
+// Season stats (from rawVideos, updated after fetch)
 export const seasonStats = {
-  totalViews: meta?.stat?.view ?? 0,
-  totalFavorites: meta?.stat?.favorite ?? 0,
-  totalShares: meta?.stat?.share ?? 0,
-  totalLikes: meta?.stat?.like ?? 0,
-  totalEpisodes: meta?.ep_count ?? 0,
-  intro: meta?.intro ?? '',
+  totalViews: 0,
+  totalFavorites: 0,
+  totalShares: 0,
+  totalLikes: 0,
+  totalEpisodes: 0,
+  intro: '',
 }
 
-export const totalPlays = rawVideos.reduce((sum, v) => sum + (v.play || 0), 0)
-export const totalVideos = rawVideos.length
+// Will be updated after rawVideos loads
+function updateStats() {
+  const meta = rawVideos[0]?.meta
+  if (meta) {
+    seasonStats.totalViews = meta.stat?.view ?? 0
+    seasonStats.totalFavorites = meta.stat?.favorite ?? 0
+    seasonStats.totalShares = meta.stat?.share ?? 0
+    seasonStats.totalLikes = meta.stat?.like ?? 0
+    seasonStats.totalEpisodes = meta.ep_count ?? 0
+    seasonStats.intro = meta.intro ?? ''
+  }
+}
 
-export const categories = [...new Set(videos.map(v => v.profession))].sort()
+export const totalPlays = 0
+export const totalVideos = 0
+
+export const categories = []
 
 export function getBroadCategories() {
   const map = {}
