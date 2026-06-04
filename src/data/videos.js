@@ -252,6 +252,16 @@ let rawVideos = []
 export const videos = []
 export let loading = true
 
+// Simple pub/sub for video updates
+const listeners = new Set()
+function notifyListeners() {
+  listeners.forEach(fn => fn())
+}
+export function onVideosUpdate(fn) {
+  listeners.add(fn)
+  return () => listeners.delete(fn)
+}
+
 // Always fetch from public JSON
 ;(async () => {
   try {
@@ -260,10 +270,12 @@ export let loading = true
     videos.length = 0
     videos.push(...processed)
     updateDerived()
+    notifyListeners()
   } catch (e) {
     console.warn('[data] Failed to fetch videos.json:', e.message)
   } finally {
     loading = false
+    notifyListeners()
   }
 
   // Background refresh from Bilibili API

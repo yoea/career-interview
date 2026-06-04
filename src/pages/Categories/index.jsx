@@ -1,4 +1,5 @@
-import { Typography, Card, Row, Col, Badge } from 'antd'
+import { useState, useEffect } from 'react'
+import { Typography, Card, Row, Col, Badge, Spin } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faGraduationCap, faStethoscope, faLaptopCode, faScaleBalanced,
@@ -6,7 +7,7 @@ import {
   faHeartPulse, faFlask, faPenNib, faWrench,
   faSeedling, faHelmetSafety, faDatabase, faEllipsis,
 } from '@fortawesome/free-solid-svg-icons'
-import { getBroadCategories } from '../../data/videos'
+import { getBroadCategories, loading, onVideosUpdate } from '../../data/videos'
 import styles from './Categories.module.scss'
 
 const { Title, Paragraph } = Typography
@@ -29,7 +30,26 @@ const colors = [
 ]
 
 export default function Categories() {
-  const groups = getBroadCategories()
+  const [groups, setGroups] = useState([])
+
+  useEffect(() => {
+    const update = () => setGroups(getBroadCategories())
+    update()
+    return onVideosUpdate(update)
+  }, [])
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.inner}>
+          <div className={styles.loading}>
+            <Spin size="large" />
+            <Paragraph className={styles.loadingText}>加载中...</Paragraph>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={styles.page}>

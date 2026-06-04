@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react'
-import { Typography, Input, Segmented } from 'antd'
-import { getVideosByCategory } from '../../data/videos'
+import { useState, useEffect, useMemo } from 'react'
+import { Typography, Input, Segmented, Spin } from 'antd'
+import { getVideosByCategory, loading, onVideosUpdate } from '../../data/videos'
 import styles from './Topics.module.scss'
 
 const { Title, Paragraph } = Typography
@@ -13,9 +13,15 @@ const tagColors = [
 ]
 
 export default function Topics() {
-  const allTopics = useMemo(() => getVideosByCategory(), [])
+  const [allTopics, setAllTopics] = useState([])
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('count')
+
+  useEffect(() => {
+    const update = () => setAllTopics(getVideosByCategory())
+    update()
+    return onVideosUpdate(update)
+  }, [])
 
   const maxCount = allTopics[0]?.count || 1
   const minCount = 1
@@ -39,6 +45,19 @@ export default function Topics() {
 
   function getColor(i) {
     return tagColors[i % tagColors.length]
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.inner}>
+          <div className={styles.loading}>
+            <Spin size="large" />
+            <Paragraph className={styles.loadingText}>加载中...</Paragraph>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

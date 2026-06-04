@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Typography, Card, Row, Col, Tag, Input, Select, Segmented, Pagination, Spin } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faPlay, faComment, faArrowDownWideShort } from '@fortawesome/free-solid-svg-icons'
-import { videos, formatPlayCount, loading } from '../../data/videos'
+import { videos, formatPlayCount, loading, onVideosUpdate } from '../../data/videos'
 import styles from './Interviews.module.scss'
 
 const { Title, Paragraph } = Typography
@@ -26,13 +26,8 @@ export default function Interviews() {
   const [page, setPage] = useState(1)
   const [videoList, setVideoList] = useState([...videos])
 
-  // Update videoList when videos changes
-  useEffect(() => {
-    const update = () => setVideoList([...videos])
-    // Check for changes periodically
-    const interval = setInterval(update, 500)
-    return () => clearInterval(interval)
-  }, [])
+  // Subscribe to video updates
+  useEffect(() => onVideosUpdate(() => setVideoList([...videos])), [])
 
   const filtered = videoList.filter(v => {
     const matchSearch = !search || v.title.includes(search) || v.profession.includes(search)
@@ -143,13 +138,12 @@ export default function Interviews() {
                       referrerPolicy="no-referrer"
                     />
                     <span className={styles.duration}>{item.length}</span>
+                    <div className={styles.overlayTags}>
+                      <Tag color="green" className={styles.overlayTag}>{item.category}</Tag>
+                    </div>
                   </div>
                 }>
-                  <div className={styles.tags}>
-                    <Tag color="blue" className={styles.tag}>{item.profession}</Tag>
-                    <Tag color="green" className={styles.tag}>{item.category}</Tag>
-                  </div>
-                  <Title level={5} className={styles.cardTitle}>{item.title}</Title>
+                  <Title level={5} className={styles.cardTitle} title={item.title}>{item.title}</Title>
                   <div className={styles.cardMeta}>
                     <span><FontAwesomeIcon icon={faPlay} /> {formatPlayCount(item.play)}</span>
                     <span><FontAwesomeIcon icon={faComment} /> {item.comment}</span>
