@@ -4,7 +4,8 @@ import { execSync } from 'child_process'
 
 // Get git commit hash at build time
 const commitHash = execSync('git rev-parse --short HEAD').toString().trim()
-const buildTime = new Date().toISOString().replace('T', ' ').slice(0, 19)
+const now = new Date()
+const buildTime = new Date(now.getTime() + 8 * 60 * 60 * 1000).toISOString().replace('T', ' ').slice(0, 19)
 
 export default defineConfig({
   plugins: [react()],
