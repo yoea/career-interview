@@ -271,9 +271,13 @@ export const videos = [...initialData]
       setCache(processed)
       videos.length = 0
       videos.push(...processed)
+      updateDerived()
     } catch (e) {
       console.warn('[data] Failed to fetch videos.json:', e.message)
     }
+  } else {
+    // Use cached data, derive categories from it
+    updateDerived()
   }
 
   // Background refresh from Bilibili API
@@ -305,10 +309,16 @@ function updateStats() {
   }
 }
 
-export const totalPlays = 0
-export const totalVideos = 0
+export let totalPlays = 0
+export let totalVideos = 0
+export let categories = []
 
-export const categories = []
+// Update after videos load
+function updateDerived() {
+  totalPlays = rawVideos.reduce((sum, v) => sum + (v.play || 0), 0)
+  totalVideos = rawVideos.length
+  categories = [...new Set(videos.map(v => v.profession))].sort()
+}
 
 export function getBroadCategories() {
   const map = {}

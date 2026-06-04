@@ -168,7 +168,7 @@ export default function About() {
             </Paragraph>
             <div className={styles.buildInfo}>
               <Text type="secondary" className={styles.buildText}>
-                构建时间: {__BUILD_TIME__} · Commit: <a href={`https://github.com/yoea/career-interview/commit/${__COMMIT_HASH__}`} target="_blank" rel="noopener noreferrer">{__COMMIT_HASH__}</a> · <a href="https://github.com/yoea/career-interview" target="_blank" rel="noopener noreferrer">GitHub</a>
+                构建时间: {__BUILD_TIME__} · Commit: <a href={`https://github.com/yoea/career-interview/commit/${__COMMIT_HASH__}`} target="_blank" rel="noopener noreferrer" title="点击访问项目源码">{__COMMIT_HASH__}</a>
               </Text>
             </div>
           </Card>
