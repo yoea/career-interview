@@ -136,7 +136,10 @@ export default function Interviews() {
                     <span className={styles.duration}>{item.length}</span>
                   </div>
                 }>
-                  <Tag color="blue" className={styles.tag}>{item.profession}</Tag>
+                  <div className={styles.tags}>
+                    <Tag color="blue" className={styles.tag}>{item.profession}</Tag>
+                    <Tag color="green" className={styles.tag}>{item.category}</Tag>
+                  </div>
                   <Title level={5} className={styles.cardTitle}>{item.title}</Title>
                   <div className={styles.cardMeta}>
                     <span><FontAwesomeIcon icon={faPlay} /> {formatPlayCount(item.play)}</span>

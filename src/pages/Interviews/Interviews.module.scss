@@ -95,8 +95,14 @@
   font-variant-numeric: tabular-nums;
 }
 
-.tag {
+.tags {
+  display: flex;
+  gap: 4px;
   margin-bottom: 8px;
+}
+
+.tag {
+  margin-bottom: 0;
 }
 
 .cardTitle {
