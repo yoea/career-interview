@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Typography, Card, Row, Col, Tag, Input, Select, Segmented, Pagination, Spin } from 'antd'
+import { Typography, Card, Row, Col, Tag, Input, Button, Select, Segmented, Pagination, Spin } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClock, faPlay, faComment, faArrowDownWideShort } from '@fortawesome/free-solid-svg-icons'
+import { faClock, faPlay, faComment, faArrowDownWideShort, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { videos, formatPlayCount, loading, onVideosUpdate } from '../../services/videos.service'
 import styles from './Interviews.module.scss'
 
 const { Title, Paragraph } = Typography
-const { Search } = Input
 
 const PAGE_SIZE = 12
 
@@ -95,23 +94,30 @@ export default function Interviews() {
         </div>
 
         <div className={styles.toolbar}>
-          <Search
-            placeholder="搜索访谈标题或职业..."
-            allowClear
-            className={styles.search}
-            onSearch={v => { setSearch(v); setPage(1) }}
-            onChange={e => { if (!e.target.value) { setSearch(''); setPage(1) } }}
-          />
+          <div className={styles.searchGroup}>
+            <Input
+              placeholder="搜索访谈标题或职业..."
+              allowClear
+              className={styles.searchInput}
+              value={search}
+              onChange={e => { setSearch(e.target.value); setPage(1) }}
+              onPressEnter={() => setPage(1)}
+            />
+            <Button
+              type="primary"
+              icon={<FontAwesomeIcon icon={faSearch} />}
+              className={styles.searchBtn}
+              onClick={() => setPage(1)}
+            />
+          </div>
           <Select
-            placeholder="筛选职业"
+            placeholder="筛选职业分类"
             allowClear
             className={styles.select}
             value={category}
-            options={(broadFilter
-              ? [...new Set(videoList.filter(v => v.category === broadFilter).map(v => v.profession))].sort()
-              : [...new Set(videoList.map(v => v.profession))].sort()
-            ).map(c => ({ label: c, value: c }))}
+            options={[...new Set(videoList.map(v => v.category))].sort().map(c => ({ label: c, value: c }))}
             onChange={handleCategoryChange}
+            popupMatchSelectWidth={false}
           />
           <Segmented
             className={styles.sort}

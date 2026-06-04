@@ -57,6 +57,24 @@
   border-radius: 12px !important;
 }
 
+.foundationHeader {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.foundationLogo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.foundationLink {
+  display: inline-block;
+  margin-top: 12px;
+}
+
 .introText {
   font-size: 15px !important;
   color: #4e5969 !important;

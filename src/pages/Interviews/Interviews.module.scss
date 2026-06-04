@@ -39,9 +39,19 @@
   margin-bottom: 32px;
 }
 
-.search {
+.searchGroup {
+  display: flex;
   max-width: 360px;
   flex: 1;
+}
+
+.searchInput {
+  flex: 1;
+  border-radius: 8px 0 0 8px !important;
+}
+
+.searchBtn {
+  border-radius: 0 8px 8px 0 !important;
 }
 
 .select {

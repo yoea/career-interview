@@ -1,9 +1,9 @@
-import { Typography, Row, Col, Card, Descriptions, Tag } from 'antd'
+import { Typography, Row, Col, Card, Descriptions, Tag, Button } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBullseye, faLocationDot, faPhone, faEnvelope,
   faBookOpen, faCampground, faComments, faChartBar,
-  faUsers, faMapMarkerAlt, faGraduationCap, faCode,
+  faUsers, faMapMarkerAlt, faGraduationCap, faCode, faExternalLinkAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import styles from './About.module.scss'
 
@@ -45,12 +45,27 @@ export default function About() {
         <div className={styles.section}>
           <Title level={3} className={styles.sectionTitle}>发起机构</Title>
           <Card className={styles.introCard}>
-            <Paragraph className={styles.introText}>
-              <Text strong>新华爱心教育基金会</Text> 坚持「让生命因爱与教育而改变」的使命，
-              长期关注中国中西部地区青少年教育发展。基金会扎根县域高中，
-              致力于通过品格教育、生涯教育、心理教育等多元项目，
-              帮助 13-18 岁青少年拓展视野、认识自我、规划未来。
-            </Paragraph>
+            <div className={styles.foundationHeader}>
+              <img src="/xhef-logo.png" alt="新华爱心教育基金会" className={styles.foundationLogo} />
+              <div>
+                <Paragraph className={styles.introText}>
+                  <Text strong>新华爱心教育基金会</Text> 坚持「让生命因爱与教育而改变」的使命，
+                  长期关注中国中西部地区青少年教育发展。基金会扎根县域高中，
+                  致力于通过品格教育、生涯教育、心理教育等多元项目，
+                  帮助 13-18 岁青少年拓展视野、认识自我、规划未来。
+                </Paragraph>
+                <a
+                  href="https://www.xhef.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.foundationLink}
+                >
+                  <Button type="primary" icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}>
+                    访问基金会官网
+                  </Button>
+                </a>
+              </div>
+            </div>
           </Card>
         </div>
 

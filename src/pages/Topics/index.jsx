@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Typography, Input, Segmented, Spin } from 'antd'
+import { Typography, Input, Button, Segmented, Spin } from 'antd'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { getVideosByCategory, loading, onVideosUpdate } from '../../services/videos.service'
 import styles from './Topics.module.scss'
 
 const { Title, Paragraph } = Typography
-const { Search } = Input
 
 const tagColors = [
   '#1677ff', '#52c41a', '#eb2f96', '#faad14', '#722ed1',
@@ -71,13 +72,21 @@ export default function Topics() {
         </div>
 
         <div className={styles.toolbar}>
-          <Search
-            placeholder="搜索话题..."
-            allowClear
-            className={styles.search}
-            onSearch={setSearch}
-            onChange={e => { if (!e.target.value) setSearch('') }}
-          />
+          <div className={styles.searchGroup}>
+            <Input
+              placeholder="搜索话题..."
+              allowClear
+              className={styles.searchInput}
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onPressEnter={() => {}}
+            />
+            <Button
+              type="primary"
+              icon={<FontAwesomeIcon icon={faSearch} />}
+              className={styles.searchBtn}
+            />
+          </div>
           <Segmented
             options={[
               { label: '按热度', value: 'count' },
