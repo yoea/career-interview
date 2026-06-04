@@ -23,3 +23,7 @@ database
 *.njsproj
 *.sln
 *.sw?
+log/
+node_modules/
+.env
+ssl/
