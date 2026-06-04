@@ -60,7 +60,7 @@ async function fetchVideoDetail(aid) {
     title: v.title,
     description: v.desc,
     url: `https://www.bilibili.com/video/${v.bvid}`,
-    pic: v.pic,
+    pic: v.pic.replace(/^http:\/\//, 'https://'),
     author: v.owner.name,
     mid: v.owner.mid,
     created: v.pubdate,

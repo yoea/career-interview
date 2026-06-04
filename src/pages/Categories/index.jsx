@@ -7,7 +7,7 @@ import {
   faHeartPulse, faFlask, faPenNib, faWrench,
   faSeedling, faHelmetSafety, faDatabase, faEllipsis,
 } from '@fortawesome/free-solid-svg-icons'
-import { getBroadCategories, loading, onVideosUpdate } from '../../data/videos'
+import { getBroadCategories, loading, onVideosUpdate } from '../../data/videos.service'
 import styles from './Categories.module.scss'
 
 const { Title, Paragraph } = Typography

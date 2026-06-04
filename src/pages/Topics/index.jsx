@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Typography, Input, Segmented, Spin } from 'antd'
-import { getVideosByCategory, loading, onVideosUpdate } from '../../data/videos'
+import { getVideosByCategory, loading, onVideosUpdate } from '../../data/videos.service'
 import styles from './Topics.module.scss'
 
 const { Title, Paragraph } = Typography

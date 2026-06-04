@@ -1,6 +1,6 @@
 # 寻路记 · 新华生涯访谈
 
-公益生涯教育视频平台，展示 95 期 B站生涯人物访谈视频。对话生涯人物，指引自我人生。
+公益生涯教育视频平台，展示 B站生涯人物访谈视频。对话生涯人物，指引自我人生。
 
 🔗 线上地址：https://career.ewing.top
 
@@ -24,36 +24,102 @@ npm run build    # 构建到 dist/
 ├── src/
 │   ├── components/    # 公共组件 (Header, Footer, Hero, Features)
 │   ├── pages/         # 页面 (首页, 访谈列表, 分类, 话题, 关于, 条款, 隐私)
-│   ├── data/          # 视频数据 + 缓存/刷新逻辑
-│   ├── config/        # 配置 (话题分类规则)
+│   ├── data/
+│   │   └── videos.service.js  # 视频数据服务（处理、分类、导出）
+│   ├── config/
+│   │   ├── categories.json    # 职业分类规则（17个大类）
+│   │   └── topics.json        # 话题分类规则（56个细类）
 │   └── styles/        # 全局样式
-├── public/            # 静态资源 (logo, favicon)
-├── deploy/            # 部署相关
-│   ├── deploy.sh      # 一键部署脚本
-│   ├── server.mjs     # 生产服务器 (静态文件 + API 代理)
-│   ├── ecosystem.config.cjs  # pm2 配置
-│   ├── DEPLOY.md      # 部署指南
+├── public/
+│   └── data/
+│       └── videos.json        # B站视频数据（运行时 fetch 读取）
+├── deploy/
+│   ├── deploy.sh              # 一键部署脚本
+│   ├── server.mjs             # 生产服务器（静态文件 + API 代理）
+│   ├── ecosystem.config.cjs   # pm2 配置
 │   └── scripts/
-│       └── fetch-bilibili.mjs  # B站数据抓取脚本
+│       └── fetch-bilibili.mjs # B站数据抓取脚本
 └── index.html         # 入口 HTML
 ```
 
-## 部署
+## 数据架构
 
-```bash
-bash deploy/deploy.sh
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  B站 API        │────▶│ fetch-bilibili   │────▶│ public/data/    │
+│  (合集视频)     │     │ .mjs             │     │ videos.json     │
+└─────────────────┘     └──────────────────┘     └────────┬────────┘
+                                                          │
+                                                          │ fetch (运行时)
+                                                          ▼
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│ React 组件      │◀────│ videos.service.js│◀────│ categories.json │
+│ (Interviews,    │     │ (处理、分类、    │     │ topics.json     │
+│  Categories,    │     │  导出)           │     │ (分类规则)      │
+│  Topics)        │     └──────────────────┘     └─────────────────┘
+└─────────────────┘
 ```
 
-详细说明见 [deploy/DEPLOY.md](deploy/DEPLOY.md)。
+### 关键文件说明
+
+| 文件 | 运行环境 | 作用 |
+|------|----------|------|
+| `public/data/videos.json` | 服务器静态文件 | B站视频数据，前端 fetch 读取 |
+| `src/data/videos.service.js` | 浏览器 | 处理数据、分类、导出给组件 |
+| `src/config/categories.json` | 浏览器 | 职业分类规则，改分类改这里 |
+| `src/config/topics.json` | 浏览器 | 话题分类规则，改话题改这里 |
+| `deploy/scripts/fetch-bilibili.mjs` | Node.js (服务器) | 抓取 B站数据，更新 videos.json |
 
 ## 数据更新
 
 ```bash
-npm run fetch    # 从 B站刷新视频数据
-npm run build    # 重新构建
+# 1. 抓取最新 B站数据
+node deploy/scripts/fetch-bilibili.mjs
+
+# 2. 部署（不需要重新构建，videos.json 是静态文件）
+scp public/data/videos.json user@server:/path/to/public/data/
 ```
 
-前端也会自动在浏览器端每小时静默刷新一次（通过 API 代理）。
+前端每次加载都会 fetch 最新的 `videos.json`，不需要重新构建。
+
+## 部署
+
+```bash
+# 构建
+npm run build
+
+# 部署到 FischerECS
+scp -r dist/* FischerECS:/opt/1panel/www/sites/career.ewing.top/index/
+ssh FischerECS "pm2 restart career-interview"
+```
+
+详细说明见 [deploy/DEPLOY.md](deploy/DEPLOY.md)。
+
+## 分类规则修改
+
+### 职业分类（大类）
+
+编辑 `src/config/categories.json`：
+
+```json
+[
+  { "name": "教育", "icon": "graduation-cap", "keywords": ["教师", "校长", "教授"] },
+  { "name": "科技·互联网", "icon": "laptop-code", "keywords": ["程序员", "软件", "人工智能"] }
+]
+```
+
+### 话题分类（细类）
+
+编辑 `src/config/topics.json`：
+
+```json
+[
+  { "topic": "高中教师", "keywords": ["高中教师", "高中数学教师"] },
+  { "topic": "软件工程师", "keywords": ["程序员", "软件", "计算机"] }
+]
+```
+
+修改后重新构建部署即可。
 
 ## 关于
 

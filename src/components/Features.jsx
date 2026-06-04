@@ -6,7 +6,7 @@ import {
   faUsers,
   faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
-import { videos, categories, totalPlays } from '../data/videos'
+import { videos, categories, totalPlays } from '../data/videos.service'
 import styles from './Features.module.scss'
 
 const { Title, Paragraph } = Typography
