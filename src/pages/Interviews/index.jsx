@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Typography, Card, Row, Col, Tag, Input, Select, Segmented, Pagination } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faPlay, faComment, faArrowDownWideShort } from '@fortawesome/free-solid-svg-icons'
-import { videos, formatPlayCount, categories } from '../../data/videos'
+import { videos, formatPlayCount } from '../../data/videos'
 import styles from './Interviews.module.scss'
 
 const { Title, Paragraph } = Typography
@@ -92,7 +92,7 @@ export default function Interviews() {
             value={category}
             options={(broadFilter
               ? [...new Set(videos.filter(v => v.category === broadFilter).map(v => v.profession))].sort()
-              : categories
+              : [...new Set(videos.map(v => v.profession))].sort()
             ).map(c => ({ label: c, value: c }))}
             onChange={handleCategoryChange}
           />
