@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Typography, Card, Row, Col, Tag, Input, Select, Segmented, Pagination, Spin } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faPlay, faComment, faArrowDownWideShort } from '@fortawesome/free-solid-svg-icons'
-import { videos, formatPlayCount, loading, onVideosUpdate } from '../../data/videos.service'
+import { videos, formatPlayCount, loading, onVideosUpdate } from '../../services/videos.service'
 import styles from './Interviews.module.scss'
 
 const { Title, Paragraph } = Typography
