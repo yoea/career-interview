@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Typography, Card, Row, Col, Tag, Input, Select, Segmented, Pagination } from 'antd'
+import { Typography, Card, Row, Col, Tag, Input, Select, Segmented, Pagination, Spin } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faPlay, faComment, faArrowDownWideShort } from '@fortawesome/free-solid-svg-icons'
-import { videos, formatPlayCount } from '../../data/videos'
+import { videos, formatPlayCount, loading } from '../../data/videos'
 import styles from './Interviews.module.scss'
 
 const { Title, Paragraph } = Typography
@@ -68,6 +68,19 @@ export default function Interviews() {
       : category
         ? `共 ${filtered.length} 期「${category}」相关访谈`
         : `共 ${videos.length} 期访谈`
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.inner}>
+          <div className={styles.loading}>
+            <Spin size="large" />
+            <Paragraph className={styles.loadingText}>加载中...</Paragraph>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={styles.page}>
