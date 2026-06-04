@@ -181,6 +181,15 @@
 .buildText {
   font-size: 12px !important;
   color: #bfbfbf !important;
+
+  a {
+    color: #8c8c8c;
+    text-decoration: none;
+
+    &:hover {
+      color: #1677ff;
+    }
+  }
 }
 
 @media (max-width: 768px) {
