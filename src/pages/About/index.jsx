@@ -166,6 +166,11 @@ export default function About() {
             <Paragraph className={styles.devText}>
               浙江省新华爱心教育基金会 · 公益数字化团队 · Ethan
             </Paragraph>
+            <div className={styles.buildInfo}>
+              <Text type="secondary" className={styles.buildText}>
+                构建时间: {__BUILD_TIME__} · Commit: {__COMMIT_HASH__}
+              </Text>
+            </div>
           </Card>
         </div>
       </div>

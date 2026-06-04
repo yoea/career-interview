@@ -1,8 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { execSync } from 'child_process'
+
+// Get git commit hash at build time
+const commitHash = execSync('git rev-parse --short HEAD').toString().trim()
+const buildTime = new Date().toISOString().replace('T', ' ').slice(0, 19)
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    __BUILD_TIME__: JSON.stringify(buildTime),
+    __COMMIT_HASH__: JSON.stringify(commitHash),
+  },
   server: {
     proxy: {
       '/api/bili': {
