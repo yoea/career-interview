@@ -67,7 +67,7 @@ export default function Interviews() {
       ? `共 ${filtered.length} 期「${broadFilter}」相关访谈`
       : category
         ? `共 ${filtered.length} 期「${category}」相关访谈`
-        : `共 ${videos.length} 期访谈，覆盖 ${categories.length} 个职业领域`
+        : `共 ${videos.length} 期访谈`
 
   return (
     <div className={styles.page}>
