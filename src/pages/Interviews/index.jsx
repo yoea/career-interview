@@ -24,8 +24,17 @@ export default function Interviews() {
   const [topicFilter] = useState(urlTopic || null)
   const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(1)
+  const [videoList, setVideoList] = useState([...videos])
 
-  const filtered = videos.filter(v => {
+  // Update videoList when videos changes
+  useEffect(() => {
+    const update = () => setVideoList([...videos])
+    // Check for changes periodically
+    const interval = setInterval(update, 500)
+    return () => clearInterval(interval)
+  }, [])
+
+  const filtered = videoList.filter(v => {
     const matchSearch = !search || v.title.includes(search) || v.profession.includes(search)
     const matchCategory = !category || v.profession === category
     const matchBroad = !broadFilter || v.category === broadFilter
@@ -67,7 +76,7 @@ export default function Interviews() {
       ? `共 ${filtered.length} 期「${broadFilter}」相关访谈`
       : category
         ? `共 ${filtered.length} 期「${category}」相关访谈`
-        : `共 ${videos.length} 期访谈`
+        : `共 ${videoList.length} 期访谈`
 
   if (loading) {
     return (
@@ -104,8 +113,8 @@ export default function Interviews() {
             className={styles.select}
             value={category}
             options={(broadFilter
-              ? [...new Set(videos.filter(v => v.category === broadFilter).map(v => v.profession))].sort()
-              : [...new Set(videos.map(v => v.profession))].sort()
+              ? [...new Set(videoList.filter(v => v.category === broadFilter).map(v => v.profession))].sort()
+              : [...new Set(videoList.map(v => v.profession))].sort()
             ).map(c => ({ label: c, value: c }))}
             onChange={handleCategoryChange}
           />
