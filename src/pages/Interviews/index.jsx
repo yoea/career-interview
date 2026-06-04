@@ -30,7 +30,7 @@ export default function Interviews() {
 
   const filtered = videoList.filter(v => {
     const matchSearch = !search || v.title.includes(search) || v.profession.includes(search)
-    const matchCategory = !category || v.profession === category
+    const matchCategory = !category || v.category === category
     const matchBroad = !broadFilter || v.category === broadFilter
     const matchTopic = !topicFilter || v.topic === topicFilter
     return matchSearch && matchCategory && matchBroad && matchTopic
