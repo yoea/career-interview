@@ -1,9 +1,5 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite",
-  "rewrites": [
-    { "source": "/api/bili/:path*", "destination": "/api/bili/:path*" },
-    { "source": "/api/wechat-qr", "destination": "/api/wechat-qr" }
-  ]
+  "framework": "vite"
 }
