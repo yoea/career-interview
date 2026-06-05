@@ -6,35 +6,42 @@ import {
   faUsers,
   faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
-import { videos, categories, totalPlays } from '../services/videos.service'
+import { videos, categories, totalPlays, onVideosUpdate } from '../services/videos.service'
+import { useState, useEffect } from 'react'
 import styles from './Features.module.scss'
 
 const { Title, Paragraph } = Typography
 
-const features = [
-  {
-    icon: faVideo,
-    title: `${videos.length} 期访谈`,
-    desc: '由中西部县域高中生采访各行各业职场人士，录制真实的职业访谈视频。',
-  },
-  {
-    icon: faIndustry,
-    title: `${categories.length} 个职业领域`,
-    desc: '覆盖科技、医疗、教育、法律、金融等众多行业，呈现多元职业路径。',
-  },
-  {
-    icon: faUsers,
-    title: '学生主导采访',
-    desc: '在爱心捐方支持下，由学校老师带领学生主动探索外部世界，规划未来。',
-  },
-  {
-    icon: faChartLine,
-    title: `${(totalPlays / 10000).toFixed(1)} 万次播放`,
-    desc: '视频总播放数，帮助更多青少年获取真实的职业信息和人生经验。',
-  },
-]
+function getFeatures() {
+  return [
+    {
+      icon: faVideo,
+      title: `${videos.length} 期访谈`,
+      desc: '由中西部县域高中生采访各行各业职场人士，录制真实的职业访谈视频。',
+    },
+    {
+      icon: faIndustry,
+      title: `${categories.length} 个职业领域`,
+      desc: '覆盖科技、医疗、教育、法律、金融等众多行业，呈现多元职业路径。',
+    },
+    {
+      icon: faUsers,
+      title: '学生主导采访',
+      desc: '在爱心捐方支持下，由学校老师带领学生主动探索外部世界，规划未来。',
+    },
+    {
+      icon: faChartLine,
+      title: `${(totalPlays / 10000).toFixed(1)} 万次播放`,
+      desc: '视频总播放数，帮助更多青少年获取真实的职业信息和人生经验。',
+    },
+  ]
+}
 
 export default function Features() {
+  const [, setTick] = useState(0)
+  useEffect(() => onVideosUpdate(() => setTick(t => t + 1)), [])
+
+  const features = getFeatures()
   return (
     <section className={styles.features}>
       <div className={styles.inner}>
