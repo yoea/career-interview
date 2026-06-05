@@ -84,16 +84,42 @@ scp public/data/videos.json user@server:/path/to/public/data/
 
 ## 部署
 
-```bash
-# 构建
-npm run build
+### 一键部署（推荐）
 
-# 部署到 FischerECS
-scp -r dist/* FischerECS:/opt/1panel/www/sites/career.ewing.top/index/
-ssh FischerECS "pm2 restart career-interview"
+```bash
+bash deploy/deploy.sh
 ```
 
-详细说明见 [deploy/DEPLOY.md](deploy/DEPLOY.md)。
+脚本自动完成：构建 → 上传 dist → 同步服务端文件 → 按需重启 pm2 → 健康检查。
+
+### 部署配置
+
+编辑 `deploy/deploy.sh` 顶部：
+
+```bash
+REMOTE="fischerecs"                                    # SSH Host 别名（~/.ssh/config）
+REMOTE_DIR="/opt/1panel/www/sites/career.ewing.top"    # 远程目录
+SUDO_PASS="***"                                        # 服务器 sudo 密码
+```
+
+### 手动部署
+
+```bash
+npm run build
+rsync -avz --delete dist/ YOUR_HOST:/tmp/career-dist/
+ssh YOUR_HOST "sudo cp -r /tmp/career-dist/* /opt/1panel/www/sites/career.ewing.top/index/"
+ssh YOUR_HOST "pm2 restart career-interview"
+```
+
+### 服务器架构
+
+- 运行时：Node.js (server.mjs) + pm2 进程管理
+- 端口：35173（内部），通过 1Panel/Nginx 反代到 443
+- 域名：career.ewing.top / career.xhef.org
+- 目录：`/opt/1panel/www/sites/career.ewing.top/`
+  - `index/` — 静态文件（dist 构建产物）
+  - `server.mjs` — 生产服务器
+  - `ecosystem.config.cjs` — pm2 配置
 
 ## 分类规则修改
 
