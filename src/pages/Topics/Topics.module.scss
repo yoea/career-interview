@@ -42,15 +42,15 @@
 .searchGroup {
   display: flex;
   max-width: 280px;
+  gap: 8px;
 }
 
 .searchInput {
   flex: 1;
-  border-radius: 8px 0 0 8px !important;
 }
 
 .searchBtn {
-  border-radius: 0 8px 8px 0 !important;
+  flex-shrink: 0;
 }
 
 /* ─── Tag Cloud ───────────────────────────────── */

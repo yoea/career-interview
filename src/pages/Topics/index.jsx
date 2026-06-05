@@ -83,9 +83,10 @@ export default function Topics() {
             />
             <Button
               type="primary"
-              icon={<FontAwesomeIcon icon={faSearch} />}
               className={styles.searchBtn}
-            />
+            >
+              搜索
+            </Button>
           </div>
           <Segmented
             options={[

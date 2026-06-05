@@ -105,10 +105,11 @@ export default function Interviews() {
             />
             <Button
               type="primary"
-              icon={<FontAwesomeIcon icon={faSearch} />}
               className={styles.searchBtn}
               onClick={() => setPage(1)}
-            />
+            >
+              搜索
+            </Button>
           </div>
           <Select
             placeholder="筛选职业分类"
