@@ -22,14 +22,26 @@ export default function Interviews() {
   const [search, setSearch] = useState('')
   // If URL has broad category, don't set specific category filter
   const [category, setCategory] = useState(urlBroad ? null : (urlCategory || null))
-  const [broadFilter] = useState(urlBroad || null)
-  const [topicFilter] = useState(urlTopic || null)
   const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(1)
   const [videoList, setVideoList] = useState([...videos])
 
   // Subscribe to video updates
   useEffect(() => onVideosUpdate(() => setVideoList([...videos])), [])
+
+  // Sync category state when URL changes (e.g. from Categories page navigation)
+  useEffect(() => {
+    const broad = searchParams.get('broad')
+    const cat = searchParams.get('category')
+    if (broad) {
+      setCategory(null)
+    } else if (cat) {
+      setCategory(cat)
+    }
+  }, [searchParams])
+
+  const broadFilter = searchParams.get('broad')
+  const topicFilter = searchParams.get('topic')
 
   const filtered = videoList.filter(v => {
     const matchSearch = !search || v.title.includes(search) || v.profession.includes(search)
