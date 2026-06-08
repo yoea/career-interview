@@ -1,11 +1,11 @@
 module.exports = {
   apps: [{
-    name: 'career-interview',
+    name: 'ccca-career-interview',
     script: 'server.mjs',
-    cwd: '/opt/1panel/www/sites/career.ewing.top',
+    cwd: '/opt/xhef-career-interview/ccca.xhef.org',
     env: {
-      PORT: 35173,
-      STATIC_DIR: '/opt/1panel/www/sites/career.ewing.top/index',
+      PORT: 13682,
+      STATIC_DIR: '/opt/xhef-career-interview/ccca.xhef.org',
     },
   }],
 }

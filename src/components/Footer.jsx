@@ -8,7 +8,7 @@ import styles from './Footer.module.scss'
 const { Footer: AntFooter } = Layout
 const { Title, Text, Link } = Typography
 
-const EMAIL = 'yy.yu@xhef.org'
+const EMAIL = 'info@xhef.org'
 
 const columns = [
   {
@@ -31,7 +31,7 @@ const columns = [
     links: [
       { label: '用户协议', href: '/terms' },
       { label: '隐私政策', href: '/privacy' },
-      { label: '意见反馈', href: `mailto:${EMAIL}`, external: true },
+      { label: '意见反馈', href: 'https://www.xhef.org/owe/join', external: true },
     ],
   },
 ]
