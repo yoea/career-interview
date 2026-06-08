@@ -40,6 +40,7 @@ function getFeatures(navigate) {
       icon: faUsers,
       title: '学生主导采访',
       desc: '在爱心捐方支持下，由学校老师带领学生主动探索外部世界，规划未来。',
+      onClick: () => navigate('/about'),
     },
   ]
 }

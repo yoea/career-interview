@@ -4,9 +4,12 @@ import { Typography, Card, Row, Col, Tag, Input, Button, Select, Segmented, Pagi
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faPlay, faComment, faArrowDownWideShort, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { videos, formatPlayCount, loading, onVideosUpdate } from '../../services/videos.service'
+import categoriesJson from '../../config/categories.json'
 import styles from './Interviews.module.scss'
 
 const { Title, Paragraph } = Typography
+
+const categoryColorMap = Object.fromEntries(categoriesJson.map(c => [c.name, c.color]))
 
 const PAGE_SIZE = 12
 
@@ -152,7 +155,7 @@ export default function Interviews() {
                     <span><FontAwesomeIcon icon={faPlay} /> {formatPlayCount(item.play)}</span>
                     <span><FontAwesomeIcon icon={faComment} /> {item.comment}</span>
                     <span><FontAwesomeIcon icon={faClock} /> {item.date}</span>
-                    <Tag color="green" className={styles.categoryTag}>{item.category}</Tag>
+                    <Tag color={categoryColorMap[item.category] || 'green'} className={styles.categoryTag}>{item.category}</Tag>
                   </div>
                 </Card>
               </a>

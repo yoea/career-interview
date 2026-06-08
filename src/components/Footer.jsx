@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Layout, Typography, Space, Divider, Tooltip, Popover, message } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
@@ -38,6 +38,7 @@ const columns = [
 
 export default function Footer() {
   const [copied, setCopied] = useState(false)
+  const [visitCount, setVisitCount] = useState(null)
 
   const copyEmail = () => {
     navigator.clipboard.writeText(EMAIL).then(() => {
@@ -46,6 +47,13 @@ export default function Footer() {
       setTimeout(() => setCopied(false), 2000)
     })
   }
+
+  useEffect(() => {
+    fetch('/api/visit/count')
+      .then(r => r.json())
+      .then(d => setVisitCount(d.count))
+      .catch(() => {})
+  }, [])
 
   return (
     <AntFooter className={styles.footer}>
@@ -103,6 +111,11 @@ export default function Footer() {
           <Text className={styles.copyright}>
             © 2026 寻路记·新华生涯访谈 All rights reserved.
           </Text>
+          {visitCount !== null && (
+            <Text className={styles.visitCount}>
+              本站访问量：{visitCount.toLocaleString()} 次
+            </Text>
+          )}
         </div>
       </div>
     </AntFooter>

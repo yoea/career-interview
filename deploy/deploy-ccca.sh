@@ -28,9 +28,23 @@ info "同步 dist/ → 腾讯云..."
 rsync -avz --delete \
   --exclude='server.mjs' \
   --exclude='ecosystem.config.cjs' \
+  --exclude='node_modules' \
+  --exclude='package.json' \
+  --exclude='package-lock.json' \
   dist/ \
   -e "ssh -i $TOS_KEY" \
   "$TOS_HOST:$REMOTE_DIR/" 2>&1 | tail -1
+
+# Step 2.5: Upload server-side files if changed
+for f in deploy/server.mjs deploy/visits.js deploy/ecosystem.config.cjs; do
+  LOCAL_HASH=$(md5sum "$f" 2>/dev/null | cut -d' ' -f1)
+  BASENAME=$(basename "$f")
+  REMOTE_HASH=$($SSH "md5sum $REMOTE_DIR/$BASENAME 2>/dev/null | cut -d' ' -f1" || true)
+  if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
+    info "上传 $BASENAME（有变更）..."
+    scp -i $TOS_KEY "$f" "$TOS_HOST:$REMOTE_DIR/$BASENAME"
+  fi
+done
 
 # Step 3: Restart pm2
 info "重启 pm2..."

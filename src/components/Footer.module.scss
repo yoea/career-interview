@@ -92,12 +92,19 @@
 }
 
 .bottom {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .copyright {
   font-size: 13px;
   color: #4e5969 !important;
+}
+
+.visitCount {
+  font-size: 13px;
+  color: #86909c !important;
 }
 
 @media (max-width: 768px) {
@@ -145,7 +152,16 @@
     margin: 20px 0 12px !important;
   }
 
+  .bottom {
+    flex-direction: column;
+    gap: 4px;
+  }
+
   .copyright {
     font-size: 12px;
+  }
+
+  .visitCount {
+    font-size: 11px;
   }
 }

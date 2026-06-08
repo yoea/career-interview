@@ -8,6 +8,7 @@ import {
   faSeedling, faHelmetSafety, faDatabase, faEllipsis,
 } from '@fortawesome/free-solid-svg-icons'
 import { getBroadCategories, loading, onVideosUpdate } from '../../services/videos.service'
+import categoriesJson from '../../config/categories.json'
 import styles from './Categories.module.scss'
 
 const { Title, Paragraph } = Typography
@@ -23,11 +24,7 @@ const iconMap = {
   'database': faDatabase, 'ellipsis': faEllipsis,
 }
 
-const colors = [
-  '#1677ff', '#52c41a', '#eb2f96', '#faad14', '#722ed1',
-  '#13c2c2', '#f5222d', '#2f54eb', '#fa8c16', '#1890ff',
-  '#a0d911', '#08979c', '#9254de', '#cf1322', '#d4380d', '#595959',
-]
+const colors = categoriesJson.reduce((map, c) => { map[c.name] = c.color; return map }, {})
 
 export default function Categories() {
   const [groups, setGroups] = useState([])
@@ -72,12 +69,12 @@ export default function Categories() {
                   <Badge count={cat.count} className={styles.badge} overflowCount={999} />
                   <div
                     className={styles.iconWrap}
-                    style={{ background: `${colors[i % colors.length]}12` }}
+                    style={{ background: `${colors[cat.name]}12` }}
                   >
                     <FontAwesomeIcon
                       icon={iconMap[cat.icon] || faEllipsis}
                       className={styles.icon}
-                      style={{ color: colors[i % colors.length] }}
+                      style={{ color: colors[cat.name] }}
                     />
                   </div>
                   <Title level={5} className={styles.catName}>{cat.name}</Title>

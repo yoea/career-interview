@@ -74,8 +74,51 @@ function serveStatic(res, filePath) {
 }
 
 // ─── HTTP server ─────────────────────────────────────────────────
+import { recordVisit, getVisitCount } from './visits.js'
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`)
+
+  // Visit tracking API
+  if (url.pathname === '/api/visit' && req.method === 'POST') {
+    let body = ''
+    for await (const chunk of req) body += chunk
+    try {
+      const data = JSON.parse(body)
+      const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress
+      await recordVisit({
+        ip,
+        ua: req.headers['user-agent'] || '',
+        route: data.route || url.pathname,
+        referer: req.headers['referer'] || '',
+        method: req.method,
+      })
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' })
+      res.end('{"ok":true}')
+    } catch (e) {
+      res.writeHead(400, { 'Content-Type': 'application/json' })
+      res.end('{"error":"bad request"}')
+    }
+    return
+  }
+
+  if (url.pathname === '/api/visit/count') {
+    const count = await getVisitCount()
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' })
+    res.end(JSON.stringify({ count }))
+    return
+  }
+
+  // CORS preflight for visit API
+  if (url.pathname === '/api/visit' && req.method === 'OPTIONS') {
+    res.writeHead(204, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    })
+    res.end()
+    return
+  }
 
   // API proxy: /api/bili/*
   if (url.pathname.startsWith('/api/bili/')) {
