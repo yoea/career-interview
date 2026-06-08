@@ -61,7 +61,7 @@ export default function Footer() {
             </Text>
             <Space size="middle" className={styles.socials}>
               <Popover
-                content={<img src="/api/wechat-qr" alt="微信公众号二维码" style={{ width: 160, display: 'block' }} />}
+                content={<img src="/wechat-qr.png" alt="微信公众号二维码" style={{ width: 160, display: 'block' }} />}
                 trigger="hover"
                 placement="top"
               >
