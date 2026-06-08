@@ -46,7 +46,9 @@ export default function About() {
           <Title level={3} className={styles.sectionTitle}>发起机构</Title>
           <Card className={styles.introCard}>
             <div className={styles.foundationHeader}>
-              <img src="/xhef-logo.png" alt="新华爱心教育基金会" className={styles.foundationLogo} />
+              <a href="https://www.xhef.org" target="_blank" rel="noopener noreferrer">
+                <img src="/xhef-logo.png" alt="新华爱心教育基金会" className={styles.foundationLogo} />
+              </a>
               <div>
                 <Paragraph className={styles.introText}>
                   <Text strong>浙江省新华爱心教育基金会</Text> 坚持「让生命因爱与教育而改变」的使命，
