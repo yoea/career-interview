@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { execSync } from 'child_process'
+import os from 'os'
 
 // Get git commit hash at build time
 const commitHash = execSync('git rev-parse --short HEAD').toString().trim()
-const buildHost = execSync('hostname').toString().trim()
+const buildHost = os.hostname()
 const now = new Date()
 const buildTime = new Date(now.getTime() + 8 * 60 * 60 * 1000).toISOString().replace('T', ' ').slice(0, 19)
 

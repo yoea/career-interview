@@ -1,7 +1,7 @@
 import { Typography, Row, Col, Card, Descriptions, Tag, Button } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faBullseye, faLocationDot, faPhone, faEnvelope,
+  faBullseye, faLocationDot,  faEnvelope,
   faBookOpen, faCampground, faComments, faChartBar,
   faUsers, faMapMarkerAlt, faGraduationCap, faCode, faExternalLinkAlt,
 } from '@fortawesome/free-solid-svg-icons'
@@ -140,15 +140,6 @@ export default function About() {
           <Title level={3} className={styles.sectionTitle}>联系我们</Title>
           <Card className={styles.contactCard}>
             <Row gutter={[24, 16]}>
-              <Col xs={24} md={8}>
-                <div className={styles.contactItem}>
-                  <FontAwesomeIcon icon={faPhone} className={styles.contactIcon} />
-                  <div>
-                    <Text type="secondary">电话</Text>
-                    <Paragraph className={styles.contactValue}>0573-82582258 / 82582229</Paragraph>
-                  </div>
-                </div>
-              </Col>
               <Col xs={24} md={8}>
                 <div className={styles.contactItem}>
                   <FontAwesomeIcon icon={faEnvelope} className={styles.contactIcon} />

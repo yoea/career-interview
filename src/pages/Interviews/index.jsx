@@ -145,9 +145,6 @@ export default function Interviews() {
                       referrerPolicy="no-referrer"
                     />
                     <span className={styles.duration}>{item.length}</span>
-                    <div className={styles.overlayTags}>
-                      <Tag color="green" className={styles.overlayTag}>{item.category}</Tag>
-                    </div>
                   </div>
                 }>
                   <Title level={5} className={styles.cardTitle} title={item.title}>{item.title}</Title>
@@ -155,6 +152,7 @@ export default function Interviews() {
                     <span><FontAwesomeIcon icon={faPlay} /> {formatPlayCount(item.play)}</span>
                     <span><FontAwesomeIcon icon={faComment} /> {item.comment}</span>
                     <span><FontAwesomeIcon icon={faClock} /> {item.date}</span>
+                    <Tag color="green" className={styles.categoryTag}>{item.category}</Tag>
                   </div>
                 </Card>
               </a>

@@ -73,7 +73,6 @@ export default function Terms() {
           </Paragraph>
           <ul>
             <li>邮箱：info@xhef.org</li>
-            <li>电话：0573-82582258 / 82582229</li>
             <li>地址：浙江省嘉兴市南湖区新昌路1617号</li>
           </ul>
         </Card>
