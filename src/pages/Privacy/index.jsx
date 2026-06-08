@@ -74,7 +74,7 @@ export default function Privacy() {
             如您对本隐私政策有任何疑问、意见或建议，请通过以下方式联系我们：
           </Paragraph>
           <ul>
-            <li>邮箱：yy.yu@xhef.org</li>
+            <li>邮箱：info@xhef.org</li>
             <li>电话：0573-82582258 / 82582229</li>
             <li>地址：浙江省嘉兴市南湖区新昌路1617号</li>
           </ul>
