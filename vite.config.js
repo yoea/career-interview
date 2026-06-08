@@ -4,6 +4,7 @@ import { execSync } from 'child_process'
 
 // Get git commit hash at build time
 const commitHash = execSync('git rev-parse --short HEAD').toString().trim()
+const buildHost = execSync('hostname').toString().trim()
 const now = new Date()
 const buildTime = new Date(now.getTime() + 8 * 60 * 60 * 1000).toISOString().replace('T', ' ').slice(0, 19)
 
@@ -12,6 +13,7 @@ export default defineConfig({
   define: {
     __BUILD_TIME__: JSON.stringify(buildTime),
     __COMMIT_HASH__: JSON.stringify(commitHash),
+    __BUILD_HOST__: JSON.stringify(buildHost),
   },
   server: {
     proxy: {
