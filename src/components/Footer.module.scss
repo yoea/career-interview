@@ -92,9 +92,7 @@
 }
 
 .bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
 }
 
 .copyright {
@@ -152,16 +150,7 @@
     margin: 20px 0 12px !important;
   }
 
-  .bottom {
-    flex-direction: column;
-    gap: 4px;
-  }
-
   .copyright {
     font-size: 12px;
-  }
-
-  .visitCount {
-    font-size: 11px;
   }
 }

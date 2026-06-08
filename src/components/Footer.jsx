@@ -67,6 +67,11 @@ export default function Footer() {
             <Text className={styles.brandDesc}>
               对话生涯人物，指引自我人生。
             </Text>
+            {visitCount !== null && (
+              <Text className={styles.visitCount}>
+                本站访问量：{visitCount.toLocaleString()} 次
+              </Text>
+            )}
             <Space size="middle" className={styles.socials}>
               <Popover
                 content={<img src="/wechat-qr.png" alt="微信公众号二维码" style={{ width: 160, display: 'block' }} />}
@@ -111,11 +116,6 @@ export default function Footer() {
           <Text className={styles.copyright}>
             © 2026 寻路记·新华生涯访谈 All rights reserved.
           </Text>
-          {visitCount !== null && (
-            <Text className={styles.visitCount}>
-              本站访问量：{visitCount.toLocaleString()} 次
-            </Text>
-          )}
         </div>
       </div>
     </AntFooter>
