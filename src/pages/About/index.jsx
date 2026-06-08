@@ -36,7 +36,7 @@ export default function About() {
           <Descriptions column={1} labelStyle={{ width: 160, fontWeight: 500 }}>
             <Descriptions.Item label="访谈项目">寻路记·新华生涯访谈</Descriptions.Item>
             <Descriptions.Item label="所属项目">织吾涯·新华生涯教育</Descriptions.Item>
-            <Descriptions.Item label="发起机构">新华爱心教育基金会</Descriptions.Item>
+            <Descriptions.Item label="发起机构">浙江省新华爱心教育基金会</Descriptions.Item>
             <Descriptions.Item label="运营机构">青少年发展研究中心</Descriptions.Item>
           </Descriptions>
         </Card>
@@ -49,7 +49,7 @@ export default function About() {
               <img src="/xhef-logo.png" alt="新华爱心教育基金会" className={styles.foundationLogo} />
               <div>
                 <Paragraph className={styles.introText}>
-                  <Text strong>新华爱心教育基金会</Text> 坚持「让生命因爱与教育而改变」的使命，
+                  <Text strong>浙江省新华爱心教育基金会</Text> 坚持「让生命因爱与教育而改变」的使命，
                   长期关注中国中西部地区青少年教育发展。基金会扎根县域高中，
                   致力于通过品格教育、生涯教育、心理教育等多元项目，
                   帮助 13-18 岁青少年拓展视野、认识自我、规划未来。
