@@ -111,8 +111,8 @@ server {
 ```bash
 # 连接信息
 Host: 127.0.0.1:5432
-User: root
-Password: Password123@postgres
+User: career_interview
+Password: FsH2rkcfv8jFtRHNs
 Database: career_interview
 ```
 
@@ -143,7 +143,4 @@ npm run fetch              # 刷新 B站视频数据
 
 ## Git Remote
 
-| Remote | 地址 | 用途 |
-|--------|------|------|
-| origin | git@github.com:yoea/career-interview.git | GitHub（触发 Vercel 构建） |
-| gitea | ssh://git@101.132.172.82:15022/yoea/career-interview.git | Gitea 备份 |
+<!-- Git remotes: git remote -v 查看 -->

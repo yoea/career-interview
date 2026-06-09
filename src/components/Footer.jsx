@@ -17,6 +17,7 @@ const columns = [
       { label: '全部访谈', href: '/interviews' },
       { label: '职业分类', href: '/categories' },
       { label: '热门话题', href: '/topics' },
+      { label: '仪表盘', href: '/dashboard' },
     ],
   },
   {

@@ -9,6 +9,8 @@ import Topics from './pages/Topics'
 import About from './pages/About'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
+import Dashboard from './pages/Dashboard'
+import NotFound from './pages/NotFound'
 import styles from './App.module.scss'
 
 function AppContent() {
@@ -26,6 +28,8 @@ function AppContent() {
           <Route path="/about" element={<About />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />
