@@ -143,6 +143,7 @@ export default function Dashboard() {
         {/* ─── Route Stats Table ─── */}
         <Card title="一级路由访问量 TOP10" className={styles.tableCard}>
           <Table dataSource={data.routeStats} rowKey="route" pagination={false} size="small"
+            scroll={{ x: 'max-content' }}
             columns={[
               { title: '排名', render: (_, __, i) => <Tag color={i < 3 ? 'blue' : undefined}>{i + 1}</Tag>, width: 60 },
               { title: '路由', dataIndex: 'route' },
@@ -154,6 +155,7 @@ export default function Dashboard() {
         {/* ─── Top IPs Table ─── */}
         <Card title="访问量 TOP10 IP" className={styles.tableCard}>
           <Table dataSource={data.topIps.slice(0, 10)} rowKey="ip" pagination={false} size="small"
+            scroll={{ x: 'max-content' }}
             columns={[
               { title: '排名', render: (_, __, i) => <Tag color={i < 3 ? 'red' : undefined}>{i + 1}</Tag>, width: 60 },
               { title: 'IP', dataIndex: 'ip' },
@@ -167,6 +169,7 @@ export default function Dashboard() {
         {/* ─── Province Section ─── */}
         <Card title="访问来源省份" className={styles.tableCard}>
           <Table dataSource={data.provinceStats} rowKey="province" pagination={false} size="small"
+            scroll={{ x: 'max-content' }}
             columns={[
               { title: '排名', render: (_, __, i) => i + 1, width: 60 },
               { title: '省份', dataIndex: 'province' },
@@ -197,13 +200,16 @@ function DailyChart({ data, days }) {
     if (!elRef.current || !window.echarts) return
     if (!chartRef.current) chartRef.current = window.echarts.init(elRef.current)
     const slice = data.slice(-days)
+    const isMobile = window.innerWidth <= 576
     chartRef.current.setOption({
       tooltip: { trigger: 'axis', formatter: p => `${p[0].axisValue}<br/>访问量: <b>${p[0].value}</b>` },
-      grid: { left: 50, right: 20, top: 20, bottom: 30 },
-      xAxis: { type: 'category', data: slice.map(d => d.date.slice(5)), axisLabel: { fontSize: 11 } },
-      yAxis: { type: 'value', minInterval: 1 },
+      grid: isMobile
+        ? { left: 36, right: 10, top: 10, bottom: 30 }
+        : { left: 50, right: 20, top: 20, bottom: 30 },
+      xAxis: { type: 'category', data: slice.map(d => d.date.slice(5)), axisLabel: { fontSize: isMobile ? 9 : 11 } },
+      yAxis: { type: 'value', minInterval: 1, axisLabel: { fontSize: isMobile ? 9 : 12 } },
       series: [{ type: 'line', data: slice.map(d => d.count), smooth: true, areaStyle: { opacity: 0.15 },
-        itemStyle: { color: '#1677ff' }, lineStyle: { width: 2.5 } }],
+        itemStyle: { color: '#1677ff' }, lineStyle: { width: isMobile ? 1.5 : 2.5 } }],
     }, true)
   }, [data, days])
 
@@ -223,11 +229,14 @@ function HourlyChart({ data }) {
   useEffect(() => {
     if (!elRef.current || !window.echarts) return
     if (!chartRef.current) chartRef.current = window.echarts.init(elRef.current)
+    const isMobile = window.innerWidth <= 576
     chartRef.current.setOption({
       tooltip: { trigger: 'axis', formatter: p => `${p[0].axisValue}<br/>访问量: <b>${p[0].value}</b>` },
-      grid: { left: 50, right: 20, top: 20, bottom: 30 },
-      xAxis: { type: 'category', data: data.map(d => d.hour), axisLabel: { fontSize: 10, interval: 2 } },
-      yAxis: { type: 'value', minInterval: 1 },
+      grid: isMobile
+        ? { left: 36, right: 10, top: 10, bottom: 30 }
+        : { left: 50, right: 20, top: 20, bottom: 30 },
+      xAxis: { type: 'category', data: data.map(d => d.hour), axisLabel: { fontSize: isMobile ? 8 : 10, interval: isMobile ? 5 : 2 } },
+      yAxis: { type: 'value', minInterval: 1, axisLabel: { fontSize: isMobile ? 9 : 12 } },
       series: [{ type: 'bar', data: data.map(d => d.count), itemStyle: { color: '#722ed1', borderRadius: [3, 3, 0, 0] } }],
     }, true)
   }, [data])
@@ -250,12 +259,16 @@ function PieChart({ data }) {
   useEffect(() => {
     if (!elRef.current || !window.echarts || !data?.length) return
     if (!chartRef.current) chartRef.current = window.echarts.init(elRef.current)
+    const isMobile = window.innerWidth <= 576
     chartRef.current.setOption({
       tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
-      legend: { orient: 'vertical', right: 10, top: 'center', textStyle: { fontSize: 11 } },
+      legend: isMobile
+        ? { orient: 'horizontal', bottom: 0, left: 'center', textStyle: { fontSize: 10 }, itemWidth: 12, itemHeight: 10 }
+        : { orient: 'vertical', right: 10, top: 'center', textStyle: { fontSize: 11 } },
       color: PIE_COLORS,
       series: [{
-        type: 'pie', radius: ['35%', '65%'], center: ['40%', '50%'],
+        type: 'pie', radius: ['35%', '65%'],
+        center: isMobile ? ['50%', '42%'] : ['40%', '50%'],
         label: { show: false },
         emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
         data: data.map(d => ({ name: d.name, value: d.value })),

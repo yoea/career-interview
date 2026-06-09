@@ -2,6 +2,10 @@
   min-height: 80vh;
   background: #f5f7fa;
   padding: 24px 0;
+
+  @media (max-width: 576px) {
+    padding: 12px 0;
+  }
 }
 
 .loading {
@@ -22,6 +26,10 @@
 
   :global(.ant-typography) {
     margin-bottom: 4px;
+  }
+
+  @media (max-width: 576px) {
+    margin-bottom: 16px;
   }
 }
 
@@ -76,6 +84,10 @@
   color: #1a1a2e;
   line-height: 1.2;
   margin-bottom: 4px;
+
+  @media (max-width: 576px) {
+    font-size: 18px;
+  }
 }
 
 .statLabel {
@@ -87,6 +99,24 @@
 .chartCard {
   margin-bottom: 20px;
   border-radius: 10px;
+
+  @media (max-width: 576px) {
+    :global(.ant-card-head) {
+      padding: 0 12px;
+    }
+    :global(.ant-card-head-title) {
+      font-size: 14px;
+    }
+    :global(.ant-card-extra) {
+      padding: 0;
+    }
+    :global(.ant-segmented) {
+      font-size: 12px;
+    }
+    :global(.ant-card-body) {
+      padding: 12px;
+    }
+  }
 }
 
 .chartBox {
@@ -120,6 +150,10 @@
 
 .pieBox {
   height: 260px;
+
+  @media (max-width: 576px) {
+    height: 240px;
+  }
 }
 
 .pieInner {
@@ -131,12 +165,37 @@
 .tableCard {
   margin-bottom: 20px;
   border-radius: 10px;
+
+  @media (max-width: 576px) {
+    :global(.ant-card-head) {
+      padding: 0 12px;
+    }
+    :global(.ant-card-head-title) {
+      font-size: 14px;
+    }
+    :global(.ant-card-body) {
+      padding: 12px 4px;
+    }
+    :global(.ant-table) {
+      font-size: 12px;
+    }
+    :global(.ant-table-cell) {
+      padding: 6px 8px !important;
+      white-space: nowrap;
+    }
+  }
 }
 
 // ─── Map Card ─────────────────────────────────────────────────
 .mapCard {
   margin-bottom: 20px;
   border-radius: 10px;
+
+  @media (max-width: 576px) {
+    :global(.ant-card-body) {
+      padding: 12px 4px;
+    }
+  }
 }
 
 .mapBox {
