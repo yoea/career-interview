@@ -201,6 +201,8 @@ const server = http.createServer(async (req, res) => {
       let mobileCount = 0
       const today0 = new Date(); today0.setHours(0,0,0,0)
 
+      const KNOWN_ROUTES = new Set(['/', '/interviews', '/categories', '/topics', '/about', '/terms', '/privacy', '/dashboard'])
+
       for (const v of visits) {
         const t = new Date(v.created_at)
         const age = now - t.getTime()
@@ -233,7 +235,8 @@ const server = http.createServer(async (req, res) => {
         if (v.route) {
           const pathOnly = v.route.split('?')[0]
           const seg = '/' + (pathOnly.split('/').filter(Boolean)[0] || '')
-          routeMap[seg] = (routeMap[seg] || 0) + 1
+          const key = KNOWN_ROUTES.has(seg) ? seg : '/其他'
+          routeMap[key] = (routeMap[key] || 0) + 1
         }
       }
 
