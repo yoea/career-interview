@@ -133,7 +133,7 @@ export default function Dashboard() {
 
         {/* ─── Daily Visits Chart ─── */}
         <Card title="每日访问量" className={styles.chartCard}
-          extra={<Segmented options={[{ label: '近7天', value: 7 }, { label: '近30天', value: 30 }]} value={dailyRange} onChange={setDailyRange} />}>
+          extra={<Segmented options={[{ label: '近7天', value: 7 }, { label: '近30天', value: 30 }, { label: '全部', value: 0 }]} value={dailyRange} onChange={setDailyRange} />}>
           <div className={styles.chartBox}>
             {echartsReady && <DailyChart data={data.daily} days={dailyRange} />}
           </div>
@@ -228,7 +228,7 @@ function DailyChart({ data, days }) {
   useEffect(() => {
     if (!elRef.current || !window.echarts) return
     if (!chartRef.current) chartRef.current = window.echarts.init(elRef.current)
-    const slice = data.slice(-days)
+    const slice = days === 0 ? data : data.slice(-days)
     const isMobile = window.innerWidth <= 576
     chartRef.current.setOption({
       tooltip: {
