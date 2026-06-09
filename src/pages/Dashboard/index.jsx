@@ -1,14 +1,27 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Typography, Spin, Card, Table, Tag, Segmented, Alert, message } from 'antd'
+import { Typography, Spin, Card, Table, Tag, Segmented, Alert } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faEye, faGlobe, faCalendarDay, faMapMarkerAlt,
-  faClock, faMobileAlt, faExclamationTriangle, faSync,
+  faClock, faMobileAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import styles from './Dashboard.module.scss'
 
 const { Title, Text } = Typography
 const API = '/api/dashboard/stats'
+
+// ─── Color Palette ────────────────────────────────────────────
+const PALETTE = {
+  primary: '#4f6ef7',
+  success: '#22c55e',
+  purple: '#8b5cf6',
+  orange: '#f59e0b',
+  pink: '#ec4899',
+  cyan: '#06b6d4',
+}
+
+const CHART_COLORS = ['#4f6ef7', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#14b8a6', '#a855f7', '#ef4444']
+const MAP_GRADIENT = ['#a5d8ff', '#74c0fc', '#4dabf7', '#339af0', '#228be6', '#1c7ed6', '#1971c2']
 
 // ─── ECharts loader ───────────────────────────────────────────
 const ECHARTS_CDN = 'https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js'
@@ -23,23 +36,6 @@ function loadScript(src) {
     s.onerror = () => reject(new Error(`Failed: ${src}`))
     document.head.appendChild(s)
   })
-}
-
-function initChart(el, option, deps) {
-  const chartRef = useRef(null)
-  const containerRef = useRef(null)
-
-  useEffect(() => {
-    if (!el || !window.echarts) return
-    const c = window.echarts.init(el, null, { renderer: 'canvas' })
-    chartRef.current = c
-    c.setOption(option)
-    const ro = () => c.resize()
-    window.addEventListener('resize', ro)
-    return () => { window.removeEventListener('resize', ro); c.dispose(); chartRef.current = null }
-  }, deps)
-
-  return chartRef
 }
 
 // ─── Main Component ───────────────────────────────────────────
@@ -77,12 +73,12 @@ export default function Dashboard() {
   if (!data) return null
 
   const cards = [
-    { icon: faEye, label: '总访问量', value: data.total.toLocaleString(), color: '#1677ff' },
-    { icon: faGlobe, label: '独立 IP', value: data.uniqueIps.toLocaleString(), color: '#52c41a' },
-    { icon: faCalendarDay, label: '日均访问', value: data.dailyAvg.toLocaleString(), color: '#722ed1' },
-    { icon: faMapMarkerAlt, label: '来源省份', value: `${data.provinces} 个`, color: '#fa541c' },
-    { icon: faClock, label: '高峰时段', value: data.peakHour, color: '#faad14' },
-    { icon: faMobileAlt, label: '移动端占比', value: `${data.mobilePercent}%`, color: '#eb2f96' },
+    { icon: faEye, label: '总访问量', value: data.total.toLocaleString(), color: PALETTE.primary, accent: PALETTE.primary },
+    { icon: faGlobe, label: '独立 IP', value: data.uniqueIps.toLocaleString(), color: PALETTE.success, accent: PALETTE.success },
+    { icon: faCalendarDay, label: '日均访问', value: data.dailyAvg.toLocaleString(), color: PALETTE.purple, accent: PALETTE.purple },
+    { icon: faMapMarkerAlt, label: '来源省份', value: `${data.provinces} 个`, color: PALETTE.orange, accent: PALETTE.orange },
+    { icon: faClock, label: '高峰时段', value: data.peakHour, color: '#ef8c2d', accent: '#ef8c2d' },
+    { icon: faMobileAlt, label: '移动端占比', value: `${data.mobilePercent}%`, color: PALETTE.pink, accent: PALETTE.pink },
   ]
 
   return (
@@ -96,8 +92,8 @@ export default function Dashboard() {
         {/* ─── Stats Cards ─── */}
         <div className={styles.statsGrid}>
           {cards.map(c => (
-            <Card key={c.label} className={styles.statCard}>
-              <div className={styles.statIcon} style={{ background: c.color + '18', color: c.color }}>
+            <Card key={c.label} className={styles.statCard} style={{ '--accent': c.accent }}>
+              <div className={styles.statIcon} style={{ background: c.color + '14', color: c.color }}>
                 <FontAwesomeIcon icon={c.icon} />
               </div>
               <div className={styles.statValue}>{c.value}</div>
@@ -121,13 +117,15 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* ─── UA Pie Charts ─── */}
-        <div className={styles.pieRow}>
-          <Card title="设备类型" className={styles.pieCard}>
-            <div className={styles.pieBox}>
-              {echartsReady && <PieChart data={data.devices} />}
-            </div>
-          </Card>
+        {/* ─── Device Type (full width) ─── */}
+        <Card title="设备类型" className={styles.deviceCard}>
+          <div className={styles.pieBox}>
+            {echartsReady && <PieChart data={data.devices} />}
+          </div>
+        </Card>
+
+        {/* ─── Browser + OS (side by side) ─── */}
+        <div className={styles.uaRow}>
           <Card title="浏览器" className={styles.pieCard}>
             <div className={styles.pieBox}>
               {echartsReady && <PieChart data={data.browsers} />}
@@ -145,7 +143,7 @@ export default function Dashboard() {
           <Table dataSource={data.routeStats} rowKey="route" pagination={false} size="small"
             scroll={{ x: 'max-content' }}
             columns={[
-              { title: '排名', render: (_, __, i) => <Tag color={i < 3 ? 'blue' : undefined}>{i + 1}</Tag>, width: 60 },
+              { title: '排名', render: (_, __, i) => <Tag color={i < 3 ? 'blue' : undefined} style={{ borderRadius: 6, fontWeight: 600 }}>{i + 1}</Tag>, width: 60 },
               { title: '路由', dataIndex: 'route' },
               { title: '访问量', dataIndex: 'hits', sorter: (a, b) => a.hits - b.hits, defaultSortOrder: 'descend' },
               { title: '占比', render: (_, r) => `${(r.hits / data.total * 100).toFixed(1)}%` },
@@ -157,7 +155,7 @@ export default function Dashboard() {
           <Table dataSource={data.topIps.slice(0, 10)} rowKey="ip" pagination={false} size="small"
             scroll={{ x: 'max-content' }}
             columns={[
-              { title: '排名', render: (_, __, i) => <Tag color={i < 3 ? 'red' : undefined}>{i + 1}</Tag>, width: 60 },
+              { title: '排名', render: (_, __, i) => <Tag color={i < 3 ? 'red' : undefined} style={{ borderRadius: 6, fontWeight: 600 }}>{i + 1}</Tag>, width: 60 },
               { title: 'IP', dataIndex: 'ip' },
               { title: '访问量', dataIndex: 'count', sorter: (a, b) => a.count - b.count, defaultSortOrder: 'descend' },
               { title: '省份', dataIndex: 'province', render: v => v || '-' },
@@ -180,6 +178,7 @@ export default function Dashboard() {
               }},
             ]} />
         </Card>
+
         <Card title="访问量地图" className={styles.mapCard}>
           <div className={styles.mapBox}>
             {echartsReady && chinaRegistered && <ProvinceMap data={data.provinceStats} />}
@@ -202,14 +201,48 @@ function DailyChart({ data, days }) {
     const slice = data.slice(-days)
     const isMobile = window.innerWidth <= 576
     chartRef.current.setOption({
-      tooltip: { trigger: 'axis', formatter: p => `${p[0].axisValue}<br/>访问量: <b>${p[0].value}</b>` },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(255,255,255,0.96)',
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        textStyle: { color: '#1e2a3a', fontSize: 12 },
+        formatter: p => `${p[0].axisValue}<br/>访问量: <b style="color:${PALETTE.primary}">${p[0].value}</b>`,
+      },
       grid: isMobile
         ? { left: 36, right: 10, top: 10, bottom: 30 }
         : { left: 50, right: 20, top: 20, bottom: 30 },
-      xAxis: { type: 'category', data: slice.map(d => d.date.slice(5)), axisLabel: { fontSize: isMobile ? 9 : 11 } },
-      yAxis: { type: 'value', minInterval: 1, axisLabel: { fontSize: isMobile ? 9 : 12 } },
-      series: [{ type: 'line', data: slice.map(d => d.count), smooth: true, areaStyle: { opacity: 0.15 },
-        itemStyle: { color: '#1677ff' }, lineStyle: { width: isMobile ? 1.5 : 2.5 } }],
+      xAxis: {
+        type: 'category',
+        data: slice.map(d => d.date.slice(5)),
+        axisLabel: { fontSize: isMobile ? 9 : 11, color: '#8c99a8' },
+        axisLine: { lineStyle: { color: '#e8e8e8' } },
+      },
+      yAxis: {
+        type: 'value',
+        minInterval: 1,
+        axisLabel: { fontSize: isMobile ? 9 : 12, color: '#8c99a8' },
+        splitLine: { lineStyle: { color: '#f0f2f5', type: 'dashed' } },
+      },
+      series: [{
+        type: 'line',
+        data: slice.map(d => d.count),
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: isMobile ? 4 : 6,
+        showSymbol: slice.length <= 14,
+        areaStyle: {
+          color: {
+            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: PALETTE.primary + '30' },
+              { offset: 1, color: PALETTE.primary + '05' },
+            ],
+          },
+        },
+        itemStyle: { color: PALETTE.primary, borderWidth: 2, borderColor: '#fff' },
+        lineStyle: { width: isMobile ? 2 : 2.5, color: PALETTE.primary },
+      }],
     }, true)
   }, [data, days])
 
@@ -231,13 +264,44 @@ function HourlyChart({ data }) {
     if (!chartRef.current) chartRef.current = window.echarts.init(elRef.current)
     const isMobile = window.innerWidth <= 576
     chartRef.current.setOption({
-      tooltip: { trigger: 'axis', formatter: p => `${p[0].axisValue}<br/>访问量: <b>${p[0].value}</b>` },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(255,255,255,0.96)',
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        textStyle: { color: '#1e2a3a', fontSize: 12 },
+        formatter: p => `${p[0].axisValue}<br/>访问量: <b style="color:${PALETTE.purple}">${p[0].value}</b>`,
+      },
       grid: isMobile
         ? { left: 36, right: 10, top: 10, bottom: 30 }
         : { left: 50, right: 20, top: 20, bottom: 30 },
-      xAxis: { type: 'category', data: data.map(d => d.hour), axisLabel: { fontSize: isMobile ? 8 : 10, interval: isMobile ? 5 : 2 } },
-      yAxis: { type: 'value', minInterval: 1, axisLabel: { fontSize: isMobile ? 9 : 12 } },
-      series: [{ type: 'bar', data: data.map(d => d.count), itemStyle: { color: '#722ed1', borderRadius: [3, 3, 0, 0] } }],
+      xAxis: {
+        type: 'category',
+        data: data.map(d => d.hour),
+        axisLabel: { fontSize: isMobile ? 8 : 10, interval: isMobile ? 5 : 2, color: '#8c99a8' },
+        axisLine: { lineStyle: { color: '#e8e8e8' } },
+      },
+      yAxis: {
+        type: 'value',
+        minInterval: 1,
+        axisLabel: { fontSize: isMobile ? 9 : 12, color: '#8c99a8' },
+        splitLine: { lineStyle: { color: '#f0f2f5', type: 'dashed' } },
+      },
+      series: [{
+        type: 'bar',
+        data: data.map(d => d.count),
+        barWidth: isMobile ? '40%' : '50%',
+        itemStyle: {
+          borderRadius: [4, 4, 0, 0],
+          color: {
+            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: PALETTE.purple },
+              { offset: 1, color: PALETTE.purple + 'aa' },
+            ],
+          },
+        },
+      }],
     }, true)
   }, [data])
 
@@ -250,8 +314,6 @@ function HourlyChart({ data }) {
   return <div ref={elRef} className={styles.chartInner} />
 }
 
-const PIE_COLORS = ['#1677ff', '#52c41a', '#fa541c', '#722ed1', '#faad14', '#eb2f96', '#13c2c2', '#2f54eb', '#a0d911', '#f5222d']
-
 function PieChart({ data }) {
   const elRef = useRef(null)
   const chartRef = useRef(null)
@@ -261,16 +323,28 @@ function PieChart({ data }) {
     if (!chartRef.current) chartRef.current = window.echarts.init(elRef.current)
     const isMobile = window.innerWidth <= 576
     chartRef.current.setOption({
-      tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: 'rgba(255,255,255,0.96)',
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        textStyle: { color: '#1e2a3a', fontSize: 12 },
+        formatter: '{b}: {c} ({d}%)',
+      },
       legend: isMobile
-        ? { orient: 'horizontal', bottom: 0, left: 'center', textStyle: { fontSize: 10 }, itemWidth: 12, itemHeight: 10 }
-        : { orient: 'vertical', right: 10, top: 'center', textStyle: { fontSize: 11 } },
-      color: PIE_COLORS,
+        ? { orient: 'horizontal', bottom: 0, left: 'center', textStyle: { fontSize: 10 }, itemWidth: 10, itemHeight: 10, itemGap: 8 }
+        : { orient: 'vertical', right: 12, top: 'center', textStyle: { fontSize: 11, color: '#5a6b7d' }, itemWidth: 10, itemHeight: 10 },
+      color: CHART_COLORS,
       series: [{
-        type: 'pie', radius: ['35%', '65%'],
-        center: isMobile ? ['50%', '42%'] : ['40%', '50%'],
+        type: 'pie',
+        radius: ['40%', '68%'],
+        center: isMobile ? ['50%', '42%'] : ['38%', '50%'],
         label: { show: false },
-        emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
+        emphasis: {
+          label: { show: true, fontSize: 13, fontWeight: 'bold', color: '#1e2a3a' },
+          itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.15)' },
+        },
+        itemStyle: { borderColor: '#fff', borderWidth: 2 },
         data: data.map(d => ({ name: d.name, value: d.value })),
       }],
     }, true)
@@ -295,17 +369,28 @@ function ProvinceMap({ data }) {
 
     const maxVal = Math.max(...data.map(d => d.count), 1)
     chartRef.current.setOption({
-      tooltip: { trigger: 'item', formatter: p => `${p.name}<br/>访问量: <b>${p.value || 0}</b>` },
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: 'rgba(255,255,255,0.96)',
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        textStyle: { color: '#1e2a3a', fontSize: 12 },
+        formatter: p => `${p.name}<br/>访问量: <b style="color:${PALETTE.primary}">${p.value || 0}</b>`,
+      },
       visualMap: {
         min: 0, max: maxVal, left: 10, bottom: 20,
         text: ['高', '低'], calculable: true,
-        inRange: { color: ['#50e3c2', '#4fc3f7', '#42a5f5', '#5c6bc0', '#ab47bc', '#ef5350', '#d32f2f'] },
-        textStyle: { fontSize: 12 },
+        inRange: { color: MAP_GRADIENT },
+        textStyle: { fontSize: 12, color: '#5a6b7d' },
       },
       series: [{
         type: 'map', map: 'china', roam: true,
-        label: { show: true, fontSize: 9, color: '#333' },
-        emphasis: { label: { fontSize: 12, color: '#000' }, itemStyle: { areaColor: '#ffd666' } },
+        label: { show: true, fontSize: 9, color: '#5a6b7d' },
+        emphasis: {
+          label: { fontSize: 12, color: '#1e2a3a', fontWeight: 'bold' },
+          itemStyle: { areaColor: '#dbeafe' },
+        },
+        itemStyle: { borderColor: '#fff', borderWidth: 1 },
         data: data.map(d => ({ name: d.province, value: d.count })),
       }],
     }, true)

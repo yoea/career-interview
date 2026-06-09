@@ -1,10 +1,10 @@
 .page {
   min-height: 80vh;
-  background: #f5f7fa;
-  padding: 24px 0;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+  padding: 28px 0 40px;
 
   @media (max-width: 576px) {
-    padding: 12px 0;
+    padding: 12px 0 24px;
   }
 }
 
@@ -19,13 +19,19 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+
+  @media (max-width: 576px) {
+    padding: 0 12px;
+  }
 }
 
 .header {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 
   :global(.ant-typography) {
     margin-bottom: 4px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
   }
 
   @media (max-width: 576px) {
@@ -34,56 +40,84 @@
 }
 
 .subtitle {
-  color: #888;
+  color: #8c99a8;
   font-size: 14px;
+  letter-spacing: 0.5px;
 }
 
 // ─── Stats Cards ──────────────────────────────────────────────
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 14px;
+  margin-bottom: 24px;
 
   @media (max-width: 992px) {
     grid-template-columns: repeat(3, 1fr);
   }
   @media (max-width: 576px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
   }
 }
 
 .statCard {
   text-align: center;
-  border-radius: 10px;
-  transition: box-shadow 0.2s;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+    background: var(--accent, #4f6ef7);
+  }
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   }
 
   :global(.ant-card-body) {
-    padding: 16px 12px;
+    padding: 18px 12px 14px;
+  }
+
+  @media (max-width: 576px) {
+    border-radius: 10px;
+
+    :global(.ant-card-body) {
+      padding: 14px 8px 10px;
+    }
   }
 }
 
 .statIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .statValue {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1a1a2e;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e2a3a;
   line-height: 1.2;
   margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
 
   @media (max-width: 576px) {
     font-size: 18px;
@@ -92,20 +126,34 @@
 
 .statLabel {
   font-size: 12px;
-  color: #888;
+  color: #8c99a8;
+  font-weight: 500;
 }
 
 // ─── Chart Cards ──────────────────────────────────────────────
 .chartCard {
   margin-bottom: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  :global(.ant-card-head) {
+    border-bottom: 1px solid #f0f2f5;
+    font-weight: 600;
+  }
 
   @media (max-width: 576px) {
+    margin-bottom: 12px;
+    border-radius: 10px;
+
     :global(.ant-card-head) {
       padding: 0 12px;
+      min-height: 40px;
     }
     :global(.ant-card-head-title) {
       font-size: 14px;
+      padding: 8px 0;
     }
     :global(.ant-card-extra) {
       padding: 0;
@@ -114,7 +162,7 @@
       font-size: 12px;
     }
     :global(.ant-card-body) {
-      padding: 12px;
+      padding: 8px 4px;
     }
   }
 }
@@ -125,6 +173,9 @@
   @media (max-width: 768px) {
     height: 220px;
   }
+  @media (max-width: 576px) {
+    height: 200px;
+  }
 }
 
 .chartInner {
@@ -132,27 +183,50 @@
   height: 100%;
 }
 
-// ─── Pie Row ──────────────────────────────────────────────────
-.pieRow {
+// ─── Pie Charts ───────────────────────────────────────────────
+.deviceCard {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  @media (max-width: 576px) {
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+}
+
+.uaRow {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-bottom: 20px;
 
-  @media (max-width: 992px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 576px) {
+    gap: 10px;
+    margin-bottom: 12px;
   }
 }
 
 .pieCard {
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  @media (max-width: 576px) {
+    border-radius: 10px;
+  }
 }
 
 .pieBox {
   height: 260px;
 
-  @media (max-width: 576px) {
+  @media (max-width: 768px) {
     height: 240px;
+  }
+  @media (max-width: 576px) {
+    height: 220px;
   }
 }
 
@@ -164,14 +238,36 @@
 // ─── Tables ───────────────────────────────────────────────────
 .tableCard {
   margin-bottom: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  :global(.ant-card-head) {
+    border-bottom: 1px solid #f0f2f5;
+    font-weight: 600;
+  }
+
+  :global(.ant-table-thead > tr > th) {
+    background: #fafbfc;
+    font-weight: 600;
+    color: #5a6b7d;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
 
   @media (max-width: 576px) {
+    margin-bottom: 12px;
+    border-radius: 10px;
+
     :global(.ant-card-head) {
       padding: 0 12px;
+      min-height: 40px;
     }
     :global(.ant-card-head-title) {
       font-size: 14px;
+      padding: 8px 0;
     }
     :global(.ant-card-body) {
       padding: 12px 4px;
@@ -189,11 +285,22 @@
 // ─── Map Card ─────────────────────────────────────────────────
 .mapCard {
   margin-bottom: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  :global(.ant-card-head) {
+    border-bottom: 1px solid #f0f2f5;
+    font-weight: 600;
+  }
 
   @media (max-width: 576px) {
+    margin-bottom: 12px;
+    border-radius: 10px;
+
     :global(.ant-card-body) {
-      padding: 12px 4px;
+      padding: 8px 4px;
     }
   }
 }
@@ -203,6 +310,9 @@
 
   @media (max-width: 768px) {
     height: 350px;
+  }
+  @media (max-width: 576px) {
+    height: 300px;
   }
 }
 
