@@ -189,11 +189,30 @@
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.04);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  :global(.ant-card-head) {
+    border-bottom: 1px solid #f0f2f5;
+    font-weight: 600;
+  }
 
   @media (max-width: 576px) {
     margin-bottom: 10px;
     border-radius: 10px;
   }
+}
+
+.deviceBarBox {
+  height: 200px;
+
+  @media (max-width: 576px) {
+    height: 170px;
+  }
+}
+
+.deviceBarInner {
+  width: 100%;
+  height: 100%;
 }
 
 .uaRow {

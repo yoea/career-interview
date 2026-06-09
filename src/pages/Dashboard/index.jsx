@@ -117,10 +117,10 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* ─── Device Type (full width) ─── */}
+        {/* ─── Device Type (horizontal bar) ─── */}
         <Card title="设备类型" className={styles.deviceCard}>
-          <div className={styles.pieBox}>
-            {echartsReady && <PieChart data={data.devices} />}
+          <div className={styles.deviceBarBox}>
+            {echartsReady && <DeviceBarChart data={data.devices} />}
           </div>
         </Card>
 
@@ -403,4 +403,108 @@ function ProvinceMap({ data }) {
   }, [])
 
   return <div ref={elRef} className={styles.mapInner} />
+}
+
+function DeviceBarChart({ data }) {
+  const elRef = useRef(null)
+  const chartRef = useRef(null)
+
+  useEffect(() => {
+    if (!elRef.current || !window.echarts || !data?.length) return
+    if (!chartRef.current) chartRef.current = window.echarts.init(elRef.current)
+    const isMobile = window.innerWidth <= 576
+    const sorted = [...data].sort((a, b) => a.value - b.value)
+    const maxVal = Math.max(...sorted.map(d => d.value), 1)
+
+    chartRef.current.setOption({
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        backgroundColor: 'rgba(255,255,255,0.96)',
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        textStyle: { color: '#1e2a3a', fontSize: 12 },
+        formatter: p => {
+          const d = p[0]
+          const pct = ((d.value / data.reduce((s, x) => s + x.value, 0)) * 100).toFixed(1)
+          return `${d.name}<br/>访问量: <b style="color:${PALETTE.cyan}">${d.value}</b>（${pct}%）`
+        },
+      },
+      grid: {
+        left: isMobile ? 60 : 80,
+        right: isMobile ? 40 : 60,
+        top: 8,
+        bottom: 8,
+        containLabel: false,
+      },
+      xAxis: {
+        type: 'value',
+        axisLabel: { show: false },
+        axisLine: { show: false },
+        splitLine: { show: false },
+      },
+      yAxis: {
+        type: 'category',
+        data: sorted.map(d => d.name),
+        axisLabel: {
+          fontSize: isMobile ? 11 : 13,
+          color: '#5a6b7d',
+          fontWeight: 500,
+        },
+        axisLine: { show: false },
+        axisTick: { show: false },
+      },
+      series: [{
+        type: 'bar',
+        data: sorted.map(d => d.value),
+        barWidth: isMobile ? 16 : 22,
+        barCategoryGap: '30%',
+        label: {
+          show: true,
+          position: 'right',
+          formatter: p => {
+            const pct = ((p.value / data.reduce((s, x) => s + x.value, 0)) * 100).toFixed(1)
+            return `${p.value}  ${pct}%`
+          },
+          fontSize: isMobile ? 10 : 12,
+          color: '#5a6b7d',
+          fontWeight: 500,
+        },
+        itemStyle: {
+          borderRadius: [0, 6, 6, 0],
+          color: {
+            type: 'linear', x: 0, y: 0, x2: 1, y2: 0,
+            colorStops: [
+              { offset: 0, color: PALETTE.cyan + '88' },
+              { offset: 1, color: PALETTE.cyan },
+            ],
+          },
+        },
+        emphasis: {
+          itemStyle: {
+            color: {
+              type: 'linear', x: 0, y: 0, x2: 1, y2: 0,
+              colorStops: [
+                { offset: 0, color: PALETTE.cyan },
+                { offset: 1, color: '#0891b2' },
+              ],
+            },
+          },
+        },
+        backgroundStyle: {
+          color: '#f5f7fa',
+          borderRadius: [0, 6, 6, 0],
+        },
+        showBackground: true,
+      }],
+    }, true)
+  }, [data])
+
+  useEffect(() => {
+    const ro = () => chartRef.current?.resize()
+    window.addEventListener('resize', ro)
+    return () => { window.removeEventListener('resize', ro); chartRef.current?.dispose(); chartRef.current = null }
+  }, [])
+
+  return <div ref={elRef} className={styles.deviceBarInner} />
 }
