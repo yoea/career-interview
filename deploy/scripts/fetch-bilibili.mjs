@@ -11,7 +11,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const FRONTEND_DATA = path.join(__dirname, '../../src/data/videos.json')
+const FRONTEND_DATA = path.join(__dirname, '../../public/data/videos.json')
 
 const MID = 395341214       // 新华教育基金会 UID
 const SEASON_ID = 131230    // 合集 ID

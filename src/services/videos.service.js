@@ -42,8 +42,8 @@ async function fetchLocalVideos() {
 }
 
 // ─── Background fetch from Bilibili API ──────────────────────────
-async function fetchSeasonAids() {
-  const aids = []
+async function fetchSeasonArchives() {
+  const archives = []
   let page = 1
   while (true) {
     const res = await fetch(
@@ -51,12 +51,12 @@ async function fetchSeasonAids() {
     )
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const json = await res.json()
-    if (json.code !== 0 || !json.data?.aids?.length) break
-    aids.push(...json.data.aids)
-    if (json.data.aids.length < 100) break
+    if (json.code !== 0 || !json.data?.archives?.length) break
+    archives.push(...json.data.archives)
+    if (json.data.archives.length < 100) break
     page++
   }
-  return aids
+  return archives
 }
 
 async function fetchVideoDetail(aid) {
@@ -101,23 +101,34 @@ async function backgroundFetch(existingRaw) {
   fetching = true
   try {
     console.log('[data] Refreshing from Bilibili...')
-    const aids = await fetchSeasonAids()
+    const archives = await fetchSeasonArchives()
     const existingMap = new Map((existingRaw || []).map(v => [v.aid, v]))
     const rawResults = []
 
-    for (const aid of aids) {
-      try {
-        const detail = await fetchVideoDetail(aid)
-        const old = existingMap.get(aid)
-        rawResults.push(old ? { ...old, play: detail.play, comment: detail.comment, pic: detail.pic, url: detail.url } : detail)
-      } catch {
-        if (existingMap.has(aid)) rawResults.push(existingMap.get(aid))
+    for (const arc of archives) {
+      const old = existingMap.get(arc.aid)
+      if (old) {
+        // Existing video: just update play/comment/pic from archives (no extra API call)
+        rawResults.push({
+          ...old,
+          play: arc.stat.view,
+          comment: arc.stat.reply,
+          pic: (arc.pic || '').replace(/^http:\/\//, 'https://'),
+          url: `https://www.bilibili.com/video/${arc.bvid}`,
+        })
+      } else {
+        // New video not in local data: fetch full detail
+        try {
+          const detail = await fetchVideoDetail(arc.aid)
+          rawResults.push(detail)
+          await sleep(500)
+        } catch {
+          console.warn('[data] Failed to fetch detail for aid:', arc.aid)
+        }
       }
-      await sleep(1500)
     }
 
     if (rawResults.length > 0) {
-      // Process before caching — cache stores PROCESSED data
       const processed = processVideos(rawResults)
       setCache(processed)
       videos.length = 0
