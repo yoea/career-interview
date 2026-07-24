@@ -21,7 +21,7 @@ const PALETTE = {
 }
 
 const CHART_COLORS = ['#6c8cff', '#34d673', '#fbbf24', '#a78bfa', '#f472b6', '#22d3ee', '#fb923c', '#2dd4bf', '#c084fc', '#f87171']
-const MAP_GRADIENT = ['#1e3a5f', '#1e4d8c', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe']
+const MAP_GRADIENT = ['#bfdbfe', '#93c5fd', '#60a5fa', '#3b82f6', '#2563eb', '#1e4d8c', '#1e3a5f']
 
 // ─── Dark tooltip style ───────────────────────────────────────
 const TOOLTIP = {
